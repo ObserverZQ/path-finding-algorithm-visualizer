@@ -11,7 +11,7 @@ const URLImage = React.memo(function URLImage({
   ...rest
 }: {
   src: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }) {
   const [image] = useImage(src, 'anonymous');
   return <Image image={image} {...rest} />;
@@ -107,7 +107,10 @@ export default function Maze() {
     }
   };
   /** Deal with the dragging of starting and end point on the maze. */
-  const onDragPoint = (e: DragEvent, type: 'start' | 'end') => {
+  const onDragPoint = (
+    e: KonvaEventObject<DragEvent, Node<NodeConfig>>,
+    type: 'start' | 'end'
+  ) => {
     const getValidCoordinate = (val: number, boundary: number[]) => {
       if (val >= boundary[0] && val <= boundary[1]) {
         return val;
@@ -117,7 +120,7 @@ export default function Maze() {
         return boundary[1];
       }
     };
-    const target = e.target as any; // or as Konva.Node if you have Konva types imported
+    const target = e.target;
     const fixedX = getValidCoordinate(
       Math.round(target?.x() / gridSize) * gridSize,
       xBoundary
