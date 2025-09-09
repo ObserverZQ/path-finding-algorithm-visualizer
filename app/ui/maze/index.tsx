@@ -166,7 +166,7 @@ export default function Maze() {
             width={40}
             height={40}
             draggable
-            onDragEnd={(e: DragEvent) => {
+            onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
               onDragPoint(e, 'start');
             }}
             onMouseEnter={() => {
@@ -186,7 +186,7 @@ export default function Maze() {
             width={40}
             height={40}
             draggable
-            onDragEnd={(e: DragEvent) => {
+            onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
               onDragPoint(e, 'end');
             }}
             onMouseEnter={() => {
