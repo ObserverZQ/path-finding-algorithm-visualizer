@@ -5,6 +5,7 @@ import { Shape } from 'konva/lib/Shape';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Group, Text, Image } from 'react-konva';
 import useImage from 'use-image';
+import { useBearStore } from '@/app/lib/store';
 
 const URLImage = React.memo(function URLImage({
   src,
@@ -45,7 +46,7 @@ export default function Maze() {
   const pxToCoord = (px: number) => px / gridSize;
   const [points, setPoints] = useState({
     start: { i: 6, j: 3 },
-    end: { i: 6, j: 15 },
+    goal: { i: 6, j: 15 },
   });
   const [painting, setPainting] = useState('');
   const [walls, setWalls] = useState<string[]>([]);
@@ -106,10 +107,10 @@ export default function Maze() {
       }
     }
   };
-  /** Deal with the dragging of starting and end point on the maze. */
+  /** Deal with the dragging of starting and goal point on the maze. */
   const onDragPoint = (
     e: KonvaEventObject<DragEvent, Node<NodeConfig>>,
-    type: 'start' | 'end'
+    type: 'start' | 'goal'
   ) => {
     const getValidCoordinate = (val: number, boundary: number[]) => {
       if (val >= boundary[0] && val <= boundary[1]) {
@@ -134,70 +135,78 @@ export default function Maze() {
       [type]: { i: pxToCoord(fixedY), j: pxToCoord(fixedX) },
     }));
   };
-  return (
-    <div className='p-5 border-1 border-neutral-300'>
-      <Stage
-        width={950}
-        height={600}
-        onMouseDown={onStageMouseDown}
-        onMouseUp={onStageMouseUp}
-        onMouseMove={onStageMouseMove}
-      >
-        <Layer>
-          {grids.map(({ id, x, y }) => (
-            <Group x={x} y={y} key={id}>
-              <Rect
-                name='wall'
-                width={gridSize}
-                height={gridSize}
-                stroke='grey'
-                strokeWidth={1}
-                id={id}
-              />
-              <Text text={id} fontSize={12} fontFamily='Calibri' fill='green' />
-            </Group>
-          ))}
-          {/* starting point */}
-          <URLImage
-            name='start'
-            src='/starting-point.png'
-            x={coordToPx(points.start.j)}
-            y={coordToPx(points.start.i)}
-            width={40}
-            height={40}
-            draggable
-            onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
-              onDragPoint(e, 'start');
-            }}
-            onMouseEnter={() => {
-              document.body.style.cursor = 'pointer';
-            }}
-            onMouseLeave={() => {
-              document.body.style.cursor = 'default';
-            }}
-          />
 
-          {/* destination point */}
-          <URLImage
-            name='end'
-            src='/destination.png'
-            x={coordToPx(points.end.j)}
-            y={coordToPx(points.end.i)}
-            width={40}
-            height={40}
-            draggable
-            onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
-              onDragPoint(e, 'end');
-            }}
-            onMouseEnter={() => {
-              document.body.style.cursor = 'pointer';
-            }}
-            onMouseLeave={() => {
-              document.body.style.cursor = 'default';
-            }}
-          />
-        </Layer>
-      </Stage>
-    </div>
+  /**
+   * Listens to SideBar Control Events
+   */
+  // subscribe only to what this component needs
+  const bears = useBearStore((s) => s.bears);
+  useEffect(() => {
+    console.log('bears changed and heard in maze', bears);
+  }, [bears]);
+
+  return (
+    <Stage
+      width={900}
+      height={600}
+      onMouseDown={onStageMouseDown}
+      onMouseUp={onStageMouseUp}
+      onMouseMove={onStageMouseMove}
+    >
+      <Layer>
+        {grids.map(({ id, x, y }) => (
+          <Group x={x} y={y} key={id}>
+            <Rect
+              name='wall'
+              width={gridSize}
+              height={gridSize}
+              stroke='grey'
+              strokeWidth={1}
+              id={id}
+            />
+            <Text text={id} fontSize={12} fontFamily='Calibri' fill='green' />
+          </Group>
+        ))}
+        {/* starting point */}
+        <URLImage
+          name='start'
+          src='/starting-point.png'
+          x={coordToPx(points.start.j)}
+          y={coordToPx(points.start.i)}
+          width={40}
+          height={40}
+          draggable
+          onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
+            onDragPoint(e, 'start');
+          }}
+          onMouseEnter={() => {
+            document.body.style.cursor = 'pointer';
+          }}
+          onMouseLeave={() => {
+            document.body.style.cursor = 'default';
+          }}
+        />
+
+        {/* destination point */}
+        <URLImage
+          name='goal'
+          src='/destination.png'
+          x={coordToPx(points.goal.j)}
+          y={coordToPx(points.goal.i)}
+          width={40}
+          height={40}
+          draggable
+          onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
+            onDragPoint(e, 'goal');
+          }}
+          onMouseEnter={() => {
+            document.body.style.cursor = 'pointer';
+          }}
+          onMouseLeave={() => {
+            document.body.style.cursor = 'default';
+          }}
+        />
+      </Layer>
+    </Stage>
   );
 }

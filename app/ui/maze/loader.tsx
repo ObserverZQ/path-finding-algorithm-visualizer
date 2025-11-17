@@ -10,7 +10,7 @@ const Maze = dynamic(() => import('@/app/ui/maze'), {
 
 export default function MazeLoader() {
   return (
-    <div>
+    <div className='w-[1015px] h-[660px] p-5 border-1 border-neutral-400 mt-4 bg-white'>
       <Maze />
     </div>
   );
