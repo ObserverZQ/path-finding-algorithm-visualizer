@@ -6,6 +6,8 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Group, Text, Image } from 'react-konva';
 import useImage from 'use-image';
 import { useBearStore } from '@/app/lib/store';
+import { useSideBarStore } from '@/app/lib/sidebar';
+import { AnimationStep } from '@/app/lib/animation/types';
 
 const URLImage = React.memo(function URLImage({
   src,
@@ -19,6 +21,16 @@ const URLImage = React.memo(function URLImage({
 });
 URLImage.displayName = 'URLImage';
 
+const algorithmState = useSideBarStore((s) => s.algorithm);
+const algorithmSteps = useRef<AnimationStep[]>([]);
+
+useEffect(() => {
+  // todo: listen to algorithm result and start painting paths
+  // if (algorithmState.name) {
+  // const result = runAlgorithm(/** */);
+  // animationSteps.current = result.steps;
+  // }
+}, [algorithmState]);
 export default function Maze() {
   const gridSize = 40;
   const row = 15;
