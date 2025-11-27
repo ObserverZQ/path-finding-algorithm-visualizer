@@ -21,17 +21,19 @@ const URLImage = React.memo(function URLImage({
 });
 URLImage.displayName = 'URLImage';
 
-const algorithmState = useSideBarStore((s) => s.algorithm);
-const algorithmSteps = useRef<AnimationStep[]>([]);
 
-useEffect(() => {
-  // todo: listen to algorithm result and start painting paths
-  // if (algorithmState.name) {
-  // const result = runAlgorithm(/** */);
-  // animationSteps.current = result.steps;
-  // }
-}, [algorithmState]);
 export default function Maze() {
+  const algorithmState = useSideBarStore((s) => s.algorithm);
+  const algorithmSteps = useRef<AnimationStep[]>([]);
+
+  useEffect(() => {
+    // todo: listen to algorithm result and start painting paths
+    // if (algorithmState.name) {
+    // const result = runAlgorithm(/** */);
+    // animationSteps.current = result.steps;
+    // }
+  }, [algorithmState]);
+
   const gridSize = 40;
   const row = 15;
   const col = 20;
