@@ -1,5 +1,12 @@
 import { create } from 'zustand';
 
+export enum SearchStatus {
+  Idle = 'Idle',
+  Running = 'Running',
+  Paused = 'Paused',
+  Completed = 'Completed',
+}
+
 export enum Algorithm {
   BFS = 'BFS',
   DFS = 'DFS',
@@ -56,7 +63,9 @@ const defaults: OptionsMap = {
 
 /** State Definition */
 interface SideBarState {
-  algorithm: { name: Algorithm; options: OptionsUnion };
+  algorithm: { name: Algorithm; options: OptionsUnion; };
+  status: SearchStatus;
+  setStatus: (status: SearchStatus) => void;
   setAlgorithm: (alg: Algorithm) => void;
   setAlgorithmOptions: <K extends Algorithm>(
     alg: K,
@@ -65,7 +74,11 @@ interface SideBarState {
 }
 
 export const useSideBarStore = create<SideBarState>()((set) => ({
-  algorithm: { name: Algorithm.BFS, options: defaults[Algorithm.BFS] },
+  algorithm: { name: Algorithm.DFS, options: defaults[Algorithm.BFS] },
+  status: SearchStatus.Idle,
+  setStatus(status: SearchStatus) {
+    set({ status });
+  },
   setAlgorithm: (alg: Algorithm) => {
     set({ algorithm: { name: alg, options: defaults[alg] } });
   },

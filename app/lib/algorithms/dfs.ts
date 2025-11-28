@@ -41,9 +41,17 @@ class StackFrontier {
         }
     }
 }
-
-class Maze {
-    maze: Array<Array<string>>;
+class QueueFrontier extends StackFrontier {
+    remove() {
+        if (this.empty()) {
+            throw new Error('Frontier is empty');
+        } else {
+            const cell = this.frontier.shift();
+            return cell;
+        }
+    }
+}
+export class Maze {
     width: number;
     height: number;
     walls: Array<Row>;
@@ -52,34 +60,33 @@ class Maze {
     goal: Position;
     numExplored: number;
 
-    constructor(width: number, height: number) {
-        this.maze = [];
+    constructor(width: number, height: number, start: Position, goal: Position, walls: boolean[][]) {
         this.width = width;
         this.height = height;
-        this.walls = [];
+        this.start = start;
+        this.goal = goal;
+        this.walls = walls;
         this.solution = {};
-        this.start = [0, 0];
-        this.goal = [0, 0];
         this.numExplored = 0;
 
-        // keep track of walls
-        for (let i = 0; i < height; i++) {
-            const row: Row = [];
-            for (let j = 0; j < width; j++) {
-                if (this.maze[i][j] === 'start') {
-                    this.start = [i, j];
-                    row.push(false);
-                } else if (this.maze[i][j] === 'goal') {
-                    this.goal = [i, j];
-                    row.push(false);
-                } else if (this.maze[i][j] === '') {
-                    row.push(false);
-                } else {
-                    row.push(true);
-                }
-            }
-            this.walls.push(row);
-        }
+        // // keep track of walls
+        // for (let i = 0; i < height; i++) {
+        //     const row: Row = [];
+        //     for (let j = 0; j < width; j++) {
+        //         if (this.maze[i][j] === 'start') {
+        //             this.start = [i, j];
+        //             row.push(false);
+        //         } else if (this.maze[i][j] === 'goal') {
+        //             this.goal = [i, j];
+        //             row.push(false);
+        //         } else if (this.maze[i][j] === '') {
+        //             row.push(false);
+        //         } else {
+        //             row.push(true);
+        //         }
+        //     }
+        //     this.walls.push(row);
+        // }
     }
 
     neighbors(state: Position): Record<string, Position> {
@@ -105,10 +112,12 @@ class Maze {
         // Keep track of number of states explored
         this.numExplored = 0;
         const start = new Cell(this.start, undefined, '');
+        console.log('start', start);
         // Initialize frontier to just the starting position
         const frontier = new StackFrontier([start]);
         // Initialize an empty explored set
-        const explored = new Set();
+        console.log('frontier', frontier);
+        const explored = new Set<string>();
 
         while (true) {
             if (frontier.empty()) {
@@ -117,10 +126,18 @@ class Maze {
 
             // Choose a node from the frontier
             let cell = frontier.remove() as Cell;
+            const stateKey = `${cell.state[0]},${cell.state[1]}`;
+
+            // // skip if already explored
+            // if (explored.has(stateKey)) {
+            //     continue;
+            // }
+            // Otherwise, mark node as explored
+            explored.add(stateKey);
             this.numExplored += 1;
 
             // If we find the goal in the frontier, record the path and return
-            if (cell.state === this.goal) {
+            if (cell.state[0] === this.goal[0] && cell.state[1] === this.goal[1]) {
                 const actions = [];
                 const cells = [];
                 while (cell.parent) {
@@ -136,14 +153,12 @@ class Maze {
                 return;
             }
 
-            // Mark node as explored
-            explored.add(cell);
-
             // Add neighbors to frontier
             const neighbors = this.neighbors(cell.state);
             for (const [action, state] of Object.entries(neighbors)) {
+                const neighborKey = `${state[0]},${state[1]}`;
                 // If the state is not in the frontier and not explored, add it
-                if (!frontier.contains_state(state) && !explored.has(state)) {
+                if (!frontier.contains_state(state) && !explored.has(neighborKey)) {
                     const child = new Cell(state, cell, action);
                     frontier.add(child);
                 }
@@ -151,3 +166,24 @@ class Maze {
         }
     }
 }
+
+export const solveDFS = (
+    walls: boolean[][],
+    start: [number, number],
+    goal: [number, number],
+    options: any
+): { path: Array<Position>; nodesExplored: number; } => {
+    const height = walls.length;
+    const width = walls[0].length;
+    const maze = new Maze(width, height, start, goal, walls);
+    maze.start = start;
+    maze.goal = goal;
+
+    maze.solve();
+
+    // todo: Generate animation steps from the explored nodes and solution path
+    return {
+        path: (maze.solution as any).cells,
+        nodesExplored: maze.numExplored
+    };
+}; 

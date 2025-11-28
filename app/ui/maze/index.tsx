@@ -5,9 +5,9 @@ import { Shape } from 'konva/lib/Shape';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Group, Text, Image } from 'react-konva';
 import useImage from 'use-image';
-import { useBearStore } from '@/app/lib/store';
-import { useSideBarStore } from '@/app/lib/sidebar';
+import { SearchStatus, useSideBarStore } from '@/app/lib/sidebar';
 import { AnimationStep } from '@/app/lib/animation/types';
+import { runAlgorithm } from '@/app/lib/algorithms/runner';
 
 const URLImage = React.memo(function URLImage({
   src,
@@ -23,16 +23,6 @@ URLImage.displayName = 'URLImage';
 
 
 export default function Maze() {
-  const algorithmState = useSideBarStore((s) => s.algorithm);
-  const algorithmSteps = useRef<AnimationStep[]>([]);
-
-  useEffect(() => {
-    // todo: listen to algorithm result and start painting paths
-    // if (algorithmState.name) {
-    // const result = runAlgorithm(/** */);
-    // animationSteps.current = result.steps;
-    // }
-  }, [algorithmState]);
 
   const gridSize = 40;
   const row = 15;
@@ -153,12 +143,42 @@ export default function Maze() {
   /**
    * Listens to SideBar Control Events
    */
-  // subscribe only to what this component needs
-  const bears = useBearStore((s) => s.bears);
+  const { status, algorithm, setStatus } = useSideBarStore();
+  const algorithmSteps = useRef<AnimationStep[]>([]);
   useEffect(() => {
-    console.log('bears changed and heard in maze', bears);
-  }, [bears]);
-
+    if (status === SearchStatus.Running) {
+      // Convert grid to 2D array (walls: true = blocked, false = passable)
+      const mazeGrid = generateWallsGrid(walls, points);
+      console.log('maze grid:', mazeGrid);
+      console.log('Running algorithm:', algorithm.name, algorithm.options, [points.start.i, points.start.j], [points.goal.i, points.goal.j]);
+      const result = runAlgorithm(
+        algorithm.name,
+        mazeGrid,
+        [points.start.i, points.start.j],
+        [points.goal.i, points.goal.j],
+        algorithm.options
+      );
+      console.log('Algorithm result:', result);
+      // algorithmSteps.current = result.steps;
+      setStatus(SearchStatus.Idle);
+    }
+    console.log('Algorithm status changed to:', status);
+  }, [status, algorithm, points, walls]);
+  const generateWallsGrid = (walls: string[], points: { start: { i: number; j: number; }; goal: { i: number; j: number; }; }) => {
+    const grid: boolean[][] = [];
+    for (let i = 0; i < row; i++) {
+      const rowArr: boolean[] = [];
+      for (let j = 0; j < col; j++) {
+        if (walls.includes(`${i}, ${j}`)) {
+          rowArr.push(true);
+        } else {
+          rowArr.push(false);
+        }
+      }
+      grid.push(rowArr);
+    }
+    return grid;
+  };
   return (
     <Stage
       width={900}
