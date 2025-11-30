@@ -6,8 +6,9 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Group, Text, Image } from 'react-konva';
 import useImage from 'use-image';
 import { SearchStatus, useSideBarStore } from '@/app/lib/sidebar';
-import { AnimationStep } from '@/app/lib/animation/types';
+import { AnimationStep, StepType } from '@/app/lib/animation/types';
 import { runAlgorithm } from '@/app/lib/algorithms/runner';
+import { Animator } from '@/app/lib/animation/animator';
 
 const URLImage = React.memo(function URLImage({
   src,
@@ -21,9 +22,7 @@ const URLImage = React.memo(function URLImage({
 });
 URLImage.displayName = 'URLImage';
 
-
 export default function Maze() {
-
   const gridSize = 40;
   const row = 15;
   const col = 20;
@@ -144,13 +143,21 @@ export default function Maze() {
    * Listens to SideBar Control Events
    */
   const { status, algorithm, setStatus } = useSideBarStore();
+  const [animator, setAnimator] = useState<Animator | null>(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const algorithmSteps = useRef<AnimationStep[]>([]);
   useEffect(() => {
     if (status === SearchStatus.Running) {
       // Convert grid to 2D array (walls: true = blocked, false = passable)
       const mazeGrid = generateWallsGrid(walls, points);
       console.log('maze grid:', mazeGrid);
-      console.log('Running algorithm:', algorithm.name, algorithm.options, [points.start.i, points.start.j], [points.goal.i, points.goal.j]);
+      console.log(
+        'Running algorithm:',
+        algorithm.name,
+        algorithm.options,
+        [points.start.i, points.start.j],
+        [points.goal.i, points.goal.j]
+      );
       const result = runAlgorithm(
         algorithm.name,
         mazeGrid,
@@ -159,12 +166,43 @@ export default function Maze() {
         algorithm.options
       );
       console.log('Algorithm result:', result);
+      const animator = new Animator(result);
+      setAnimator(animator);
+      setCurrentStepIndex(0);
       // algorithmSteps.current = result.steps;
-      setStatus(SearchStatus.Idle);
+      setStatus(SearchStatus.Paused);
     }
     console.log('Algorithm status changed to:', status);
   }, [status, algorithm, points, walls]);
-  const generateWallsGrid = (walls: string[], points: { start: { i: number; j: number; }; goal: { i: number; j: number; }; }) => {
+
+  // render explored/frontier/path cells with animator
+  const getRectColor = (id: string): string => {
+    if (!animator) return 'rgb(255,255,255)';
+
+    const [i, j] = id.split(', ').map(Number) as [number, number];
+    const explored = animator.getSpecificPositions(StepType.NodeExplored);
+    const frontier = animator.getSpecificPositions(StepType.NodeAdded);
+    const path = animator.getSpecificPositions(StepType.PathFound);
+
+    if (path.some((p) => p[0] === i && p[1] === j)) {
+      return 'rgb(255, 255, 0)'; // yellow = path
+    }
+    if (explored.some((p) => p[0] === i && p[1] === j)) {
+      return 'rgb(100, 149, 237)'; // cornflowerblue = explored
+    }
+    if (frontier.some((p) => p[0] === i && p[1] === j)) {
+      return 'rgb(200, 100, 255)'; // light purple = frontier
+    }
+    if (walls.includes(id)) {
+      return 'rgb(179, 179, 179)'; // gray = wall
+    }
+    return 'rgb(255, 255, 255)'; // white = empty
+  };
+
+  const generateWallsGrid = (
+    walls: string[],
+    points: { start: { i: number; j: number }; goal: { i: number; j: number } }
+  ) => {
     const grid: boolean[][] = [];
     for (let i = 0; i < row; i++) {
       const rowArr: boolean[] = [];
