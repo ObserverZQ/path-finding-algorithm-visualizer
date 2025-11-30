@@ -139,17 +139,36 @@ export default function Maze() {
     }));
   };
 
+  const generateWallsGrid = (
+    walls: string[],
+  ) => {
+    const grid: boolean[][] = [];
+    for (let i = 0; i < row; i++) {
+      const rowArr: boolean[] = [];
+      for (let j = 0; j < col; j++) {
+        if (walls.includes(`${i}, ${j}`)) {
+          rowArr.push(true);
+        } else {
+          rowArr.push(false);
+        }
+      }
+      grid.push(rowArr);
+    }
+    return grid;
+  };
+
   /**
    * Listens to SideBar Control Events
    */
   const { status, algorithm, setStatus } = useSideBarStore();
   const [animator, setAnimator] = useState<Animator | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const algorithmSteps = useRef<AnimationStep[]>([]);
+  // const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  // const algorithmSteps = useRef<AnimationStep[]>([]);
   useEffect(() => {
     if (status === SearchStatus.Running) {
       // Convert grid to 2D array (walls: true = blocked, false = passable)
-      const mazeGrid = generateWallsGrid(walls, points);
+      const mazeGrid = generateWallsGrid(walls);
       console.log('maze grid:', mazeGrid);
       console.log(
         'Running algorithm:',
@@ -168,55 +187,66 @@ export default function Maze() {
       console.log('Algorithm result:', result);
       const animator = new Animator(result);
       setAnimator(animator);
-      setCurrentStepIndex(0);
+      // setCurrentStepIndex(0);
       // algorithmSteps.current = result.steps;
-      setStatus(SearchStatus.Paused);
+      console.log('animator', animator);
+      // animator.play();
+      // setStatus(SearchStatus.Paused);
     }
     console.log('Algorithm status changed to:', status);
   }, [status, algorithm, points, walls]);
 
-  // render explored/frontier/path cells with animator
-  const getRectColor = (id: string): string => {
-    if (!animator) return 'rgb(255,255,255)';
+  // Effect 2: Handle animation loop separately
+  useEffect(() => {
+    if (!animator || status !== SearchStatus.Running) return;
 
-    const [i, j] = id.split(', ').map(Number) as [number, number];
-    const explored = animator.getSpecificPositions(StepType.NodeExplored);
-    const frontier = animator.getSpecificPositions(StepType.NodeAdded);
-    const path = animator.getSpecificPositions(StepType.PathFound);
+    let lastUpdateTime = Date.now();
+    let animationFrameId: number;
 
-    if (path.some((p) => p[0] === i && p[1] === j)) {
-      return 'rgb(255, 255, 0)'; // yellow = path
-    }
-    if (explored.some((p) => p[0] === i && p[1] === j)) {
-      return 'rgb(100, 149, 237)'; // cornflowerblue = explored
-    }
-    if (frontier.some((p) => p[0] === i && p[1] === j)) {
-      return 'rgb(200, 100, 255)'; // light purple = frontier
-    }
-    if (walls.includes(id)) {
-      return 'rgb(179, 179, 179)'; // gray = wall
-    }
-    return 'rgb(255, 255, 255)'; // white = empty
-  };
+    const animate = () => {
+      const now = Date.now();
 
-  const generateWallsGrid = (
-    walls: string[],
-    points: { start: { i: number; j: number }; goal: { i: number; j: number } }
-  ) => {
-    const grid: boolean[][] = [];
-    for (let i = 0; i < row; i++) {
-      const rowArr: boolean[] = [];
-      for (let j = 0; j < col; j++) {
-        if (walls.includes(`${i}, ${j}`)) {
-          rowArr.push(true);
-        } else {
-          rowArr.push(false);
-        }
+      // Only update if enough time has passed based on animator.speed
+      if (now - lastUpdateTime >= animator.speed) {
+        setCurrentStepIndex((prev) => {
+          const next = Math.min(prev + 1, animator.result.steps.length - 1);
+          if (next >= animator.result.steps.length - 1) {
+            setTimeout(() => setStatus(SearchStatus.Completed), 0);
+          }
+          console.log('Current Step Index:', next);
+          return next;
+        });
+        lastUpdateTime = now;
       }
-      grid.push(rowArr);
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [animator, status, setStatus]);
+
+  // Memoize color calculation
+  const colorMap = useMemo(() => {
+    const colorMap = {
+      [StepType.NodeExplored]: 'rgb(100, 149, 237)', // blue
+      [StepType.NodeAdded]: 'rgb(200, 100, 255)', // purple
+      [StepType.PathFound]: 'rgb(255, 255, 0)', // yellow 
+    };
+    const map = new Map<string, string>();
+    if (!animator) {
+      return map;
     }
-    return grid;
-  };
+    const steps = animator.result.steps.slice(0, currentStepIndex + 1);
+    steps.forEach((step) => {
+      const color = colorMap[step.type];
+      const id = `${step.position[0]}, ${step.position[1]}`;
+      map.set(id, color);
+    });
+    return map;
+  }, [animator, currentStepIndex, grids]);
+
   return (
     <Stage
       width={900}
@@ -235,6 +265,7 @@ export default function Maze() {
               stroke='grey'
               strokeWidth={1}
               id={id}
+              fill={colorMap.get(id) || 'rgb(255,255,255)'}
             />
             <Text text={id} fontSize={12} fontFamily='Calibri' fill='green' />
           </Group>

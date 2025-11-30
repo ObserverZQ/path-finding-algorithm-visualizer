@@ -3,10 +3,26 @@ import { AnimationResult, AnimationStep, StepType } from './types';
 export class Animator {
   result: AnimationResult;
   currentIndex: number = 0;
-  speed: number = 1;
+  speed: number = 16; // interval in ms
 
   constructor(result: AnimationResult) {
     this.result = result;
+  }
+
+  play(): void {
+    const interval = setInterval(() => {
+      if (this.currentIndex < this.result.steps.length - 1) {
+        this.currentIndex += 1;
+      } else {
+        clearInterval(interval);
+      }
+    }, this.speed);
+  }
+
+  moveNext(): void {
+    if (this.currentIndex < this.result.steps.length - 1) {
+      this.currentIndex += 1;
+    }
   }
 
   getCurrentStep(): AnimationStep | null {
@@ -14,9 +30,7 @@ export class Animator {
   }
 
   nextStep(): AnimationStep | null {
-    if (this.currentIndex < this.result.steps.length - 1) {
-      this.currentIndex += 1;
-    }
+    this.moveNext();
     return this.getCurrentStep();
   }
 
