@@ -1,9 +1,12 @@
 'use client';
 import { useCallback } from 'react';
-// import { Button } from 'flowbite-react';
-import { Button } from '@headlessui/react';
+import { Button } from 'flowbite-react';
+// import { Button } from '@headlessui/react';
 import { SearchStatus, useSideBarStore } from '@/app/lib/sidebar';
 import Counter from './counter';
+import AlgorithmSelection from './algorithm-selection';
+import AnimationControl from './animation-control';
+
 export default function SideBar() {
 
   const { status, setStatus } = useSideBarStore();
@@ -12,8 +15,10 @@ export default function SideBar() {
   };
 
   return (
-    <div className='w-[378px] h-full bg-amber-100'>
-      <Button className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500" onClick={changeSearchStatus}>{
+    <div className='w-[378px] h-full bg-neutral-200 border-l-1 border-l-neutral-400 p-7 flex flex-col'>
+      <AlgorithmSelection />
+      <AnimationControl />
+      <Button as="span" className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500" onClick={changeSearchStatus}>{
         status === SearchStatus.Idle ? 'Run' : 'Cancel'
       }</Button>
       <Button className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500">

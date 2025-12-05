@@ -4,9 +4,9 @@ import SideBar from '@/app/ui/side-bar';
 
 export default async function Page() {
   return (
-    <div className='w-[1440px] flex flex-col'>
+    <div className='w-full flex flex-col items-center'>
       <Header />
-      <div className='flex'>
+      <div className='w-[1440px] flex justify-between'>
         <MazeLoader />
         <SideBar />
       </div>

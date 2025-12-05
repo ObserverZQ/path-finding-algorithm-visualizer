@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { ThemeInit } from '../.flowbite-react/init';
+import { ThemeModeScript } from "flowbite-react";
 import './ui/globals.css';
 
 const geistSans = Geist({
@@ -23,10 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
+      <head>
+        <ThemeModeScript />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* <ThemeInit /> */}
         {children}
       </body>
     </html>

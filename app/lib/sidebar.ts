@@ -7,12 +7,20 @@ export enum SearchStatus {
   Completed = 'Completed',
 }
 
-export enum Algorithm {
-  BFS = 'BFS',
-  DFS = 'DFS',
-  Dijkstra = 'Dijkstra',
-  AStar = 'A*',
-}
+// Algorithm grouping by option type
+const algorithmsByOptions = {
+  base: ['BFS', 'DFS', 'Dijkstra'] as const,
+  weighted: ['AStar'] as const,
+} as const;
+
+export const AlgorithmType = {
+  BFS: 'BFS',
+  DFS: 'DFS',
+  Dijkstra: 'Dijkstra',
+  AStar: 'A*',
+} as const;
+
+export type AlgorithmTypeKey = typeof AlgorithmType[keyof typeof AlgorithmType];
 
 export enum Heuristic {
   Manhattan = 'Manhattan',
@@ -21,75 +29,112 @@ export enum Heuristic {
   Chebyshev = 'Chebyshev',
 }
 
-interface BaseOptions {
+// Option type definitions
+export interface BaseOptions {
   allowDiagonal: boolean;
   biDirectional: boolean;
   doNotCrossCorners: boolean;
 }
 
-export interface AStarOptions extends BaseOptions {
-  heuristic: Heuristic;
-  weight?: number;
+export interface WeightedOptions extends BaseOptions {
+  weight: number;
 }
 
 export type OptionsMap = {
-  [Algorithm.BFS]: BaseOptions;
-  [Algorithm.DFS]: BaseOptions;
-  [Algorithm.Dijkstra]: BaseOptions;
-  [Algorithm.AStar]: AStarOptions;
+  [AlgorithmType.BFS]: BaseOptions;
+  [AlgorithmType.DFS]: BaseOptions;
+  [AlgorithmType.Dijkstra]: BaseOptions;
+  [AlgorithmType.AStar]: WeightedOptions;
 };
 
-export type OptionsUnion = OptionsMap[Algorithm];
+export type OptionsUnion = BaseOptions | WeightedOptions;
 
-// default options
-const defaultBaseOptions: BaseOptions = {
+export type Algorithm = {
+  name: AlgorithmTypeKey;
+  options: OptionsUnion;
+  heuristic?: Heuristic; // Only for A* currently
+};
+
+// Default options
+export const defaultBaseOptions: BaseOptions = {
   allowDiagonal: false,
   biDirectional: false,
   doNotCrossCorners: false,
 };
 
-const defaultAStarOptions: AStarOptions = {
+export const defaultWeightedOptions: WeightedOptions = {
   ...defaultBaseOptions,
-  heuristic: Heuristic.Manhattan,
   weight: 1,
 };
 
+export const defaultHeuristic: Heuristic = Heuristic.Manhattan;
+
+// Create defaults dynamically
 const defaults: OptionsMap = {
-  [Algorithm.BFS]: defaultBaseOptions,
-  [Algorithm.DFS]: defaultBaseOptions,
-  [Algorithm.Dijkstra]: defaultBaseOptions,
-  [Algorithm.AStar]: defaultAStarOptions,
+  [AlgorithmType.BFS]: defaultBaseOptions,
+  [AlgorithmType.DFS]: defaultBaseOptions,
+  [AlgorithmType.Dijkstra]: defaultBaseOptions,
+  [AlgorithmType.AStar]: defaultWeightedOptions,
 };
 
-/** State Definition */
+// Helper to check if algorithm uses weights
+const usesWeight = (name: AlgorithmTypeKey): boolean => {
+  return algorithmsByOptions.weighted.includes(name as any);
+};
+
+// Helper to check if algorithm supports heuristics
+const supportsHeuristic = (name: AlgorithmTypeKey): boolean => {
+  return name === AlgorithmType.AStar;
+};
+
 interface SideBarState {
-  algorithm: { name: Algorithm; options: OptionsUnion; };
+  algorithm: Algorithm;
   status: SearchStatus;
   setStatus: (status: SearchStatus) => void;
-  setAlgorithm: (alg: Algorithm) => void;
-  setAlgorithmOptions: <K extends Algorithm>(
-    alg: K,
-    opts: Partial<OptionsMap[K]>
+  setAlgorithm: (alg: AlgorithmTypeKey) => void;
+  setAlgorithmOptions: (
+    alg: AlgorithmTypeKey,
+    opts: Partial<OptionsUnion>
   ) => void;
+  setAlgorithmHeuristic: (heuristic: Heuristic) => void;
 }
 
 export const useSideBarStore = create<SideBarState>()((set) => ({
-  algorithm: { name: Algorithm.DFS, options: defaults[Algorithm.BFS] },
+  algorithm: {
+    name: AlgorithmType.DFS,
+    options: defaults[AlgorithmType.DFS],
+    heuristic: undefined,
+  },
   status: SearchStatus.Idle,
+
   setStatus(status: SearchStatus) {
     set({ status });
   },
-  setAlgorithm: (alg: Algorithm) => {
-    set({ algorithm: { name: alg, options: defaults[alg] } });
+
+  setAlgorithm: (alg: AlgorithmTypeKey) => {
+    const algorithm: Algorithm = {
+      name: alg,
+      options: defaults[alg as keyof typeof defaults],
+      heuristic: supportsHeuristic(alg) ? defaultHeuristic : undefined,
+    };
+    set({ algorithm });
   },
-  setAlgorithmOptions: <K extends Algorithm>(
-    alg: K,
-    opts: Partial<OptionsMap[K]>
-  ) => {
-    set((state: SideBarState) => {
-      const currentOptions = state.algorithm.options as OptionsMap[K];
-      const mergedOptions = { ...currentOptions, ...opts };
-      return { algorithm: { name: alg, options: mergedOptions } };
+
+  setAlgorithmOptions: (alg: AlgorithmTypeKey, opts: Partial<OptionsUnion>) => {
+    set((state) => {
+      if (state.algorithm.name !== alg) return state;
+      return {
+        algorithm: {
+          ...state.algorithm,
+          options: { ...state.algorithm.options, ...opts },
+        },
+      };
     });
+  },
+
+  setAlgorithmHeuristic: (heuristic: Heuristic) => {
+    set((state) => ({
+      algorithm: { ...state.algorithm, heuristic },
+    }));
   },
 }));

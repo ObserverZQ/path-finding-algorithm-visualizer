@@ -1,23 +1,23 @@
-import { Algorithm } from '@/app/lib/sidebar';
+import { AlgorithmType, AlgorithmTypeKey } from '@/app/lib/sidebar';
 import { AnimationResult, AnimationStep } from '@/app/lib/animation/types';
 import { solveDFS } from './dfs';
 
 export const runAlgorithm = (
-  algorithm: Algorithm,
+  algorithm: AlgorithmTypeKey,
   walls: boolean[][],
   start: [number, number],
   goal: [number, number],
   options: any
 ): AnimationResult => {
   switch (algorithm) {
-    case Algorithm.DFS:
+    case AlgorithmType.DFS:
       return solveDFS(walls, start, goal, options);
     // throw new Error('DFS not implemented yet');
-    case Algorithm.BFS:
+    case AlgorithmType.BFS:
       throw new Error('BFS not implemented yet');
-    case Algorithm.Dijkstra:
+    case AlgorithmType.Dijkstra:
       throw new Error('Dijkstra not implemented yet');
-    case Algorithm.AStar:
+    case AlgorithmType.AStar:
       throw new Error('A* not implemented yet');
     default:
       throw new Error(`Unknown algorithm: ${algorithm}`);

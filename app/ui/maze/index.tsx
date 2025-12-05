@@ -193,7 +193,7 @@ export default function Maze() {
       // animator.play();
       // setStatus(SearchStatus.Paused);
     }
-    console.log('Algorithm status changed to:', status);
+    // console.log('Algorithm status changed to:', status);
   }, [status, algorithm, points, walls]);
 
   // Effect 2: Handle animation loop separately
