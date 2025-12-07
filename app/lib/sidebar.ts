@@ -133,6 +133,7 @@ export const useSideBarStore = create<SideBarState>()((set) => ({
   },
 
   setAlgorithmHeuristic: (heuristic: Heuristic) => {
+    console.log('Setting heuristic to:', heuristic);
     set((state) => ({
       algorithm: { ...state.algorithm, heuristic },
     }));

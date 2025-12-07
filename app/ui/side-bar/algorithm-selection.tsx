@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { Button, Checkbox, Label } from "flowbite-react";
-import { Accordion, AccordionContent, AccordionPanel, AccordionTitle } from "flowbite-react";
+import { TextInput, Checkbox, Label } from "flowbite-react";
+import { Accordion, AccordionContent, AccordionPanel, AccordionTitle, Radio } from "flowbite-react";
 // import { Transition, Field, Radio, RadioGroup } from '@headlessui/react';
 import { Algorithm, AlgorithmType, AlgorithmTypeKey, Heuristic, useSideBarStore } from '@/app/lib/sidebar';
 
@@ -24,11 +24,13 @@ export default function AlgorithmSelection() {
     };
 
     const handleOptionChange = (key: string, value: boolean) => {
+        console.log('Option changed:', key, value);
         setAlgorithmOptions(algorithm.name, { [key]: value } as any);
     };
 
-    const handleHeuristicChange = (h: Heuristic) => {
-        setAlgorithmHeuristic(h);
+    const handleHeuristicChange = (h: React.FocusEvent<HTMLDivElement>) => {
+        // setAlgorithmHeuristic(h);
+        console.log('heuristic change test', (h.target as HTMLInputElement).value);
     };
 
     return (
@@ -80,14 +82,44 @@ export default function AlgorithmSelection() {
                             {alg}
                         </AccordionTitle>
                         <AccordionContent>
-                            <div className="mb-2 text-gray-500 dark:text-gray-400">Options</div>
+                            {/* Show heuristics only for A* */}
+                            {alg === AlgorithmType.AStar && (
+                                <div className="mb-2">
+                                    <div className=" text-gray-500 dark:text-gray-400 font-medium">Heuristics</div>
+                                    {heuristics.map((h) => (
+                                        <div className="flex items-center gap-2 mb-2" key={h}>
+                                            <Radio
+                                                id={`heuristic-${h}`}
+                                                name="heuristics"
+                                                value={h}
+                                                checked={algorithm.heuristic === h}
+                                                onChange={() => setAlgorithmHeuristic(h)}
+                                            />
+                                            <Label htmlFor={`heuristic-${h}`}>{h}</Label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+
+                            <div className="text-gray-500 dark:text-gray-400">Options</div>
                             {Object.keys(algorithm.options).map((key) => (
                                 <div className="flex items-center gap-2" key={key}>
-                                    <Checkbox
-                                        id={`opt-${key}`}
-                                        checked={Boolean((algorithm.options as any)[key])}
-                                        onChange={(e) => handleOptionChange(key, (e as React.ChangeEvent<HTMLInputElement>).target.checked)}
-                                    />
+                                    {key === 'weight' ? (
+                                        <TextInput
+                                            id={`opt-${key}`}
+                                            type="number"
+                                            value={(algorithm.options as any)[key]}
+                                            onChange={(e) => handleOptionChange(key, parseFloat(e.target.value) as any)}
+                                            className="w-16 px-2 py-1 border border-gray-300 rounded"
+                                        />
+                                    ) : (
+                                        <Checkbox
+                                            id={`opt-${key}`}
+                                            checked={Boolean((algorithm.options as any)[key])}
+                                            onChange={(e) => handleOptionChange(key, (e as React.ChangeEvent<HTMLInputElement>).target.checked)}
+                                        />
+                                    )}
                                     <Label htmlFor={`opt-${key}`}>{key}</Label>
                                 </div>
                             ))}
