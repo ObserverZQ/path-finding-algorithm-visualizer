@@ -18,13 +18,13 @@ export default function SideBar() {
     <div className='w-[378px] h-full bg-neutral-200 border-l-1 border-l-neutral-400 p-7 flex flex-col'>
       <AlgorithmSelection />
       <AnimationControl />
-      <Button as="span" className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500" onClick={changeSearchStatus}>{
+      {/* <Button as="span" className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500" onClick={changeSearchStatus}>{
         status === SearchStatus.Idle ? 'Run' : 'Cancel'
       }</Button>
       <Button className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500">
         Save changes
       </Button>
-      <Counter />
+      <Counter /> */}
     </div>
   );
 }
