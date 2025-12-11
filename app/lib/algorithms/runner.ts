@@ -1,6 +1,6 @@
 import { AlgorithmType, AlgorithmTypeKey } from '@/app/lib/sidebar';
 import { AnimationResult, AnimationStep } from '@/app/lib/animation/types';
-import { solveDFS } from './dfs';
+import { solveDFS, solveBFS } from './dfs';
 
 export const runAlgorithm = (
   algorithm: AlgorithmTypeKey,
@@ -14,7 +14,7 @@ export const runAlgorithm = (
       return solveDFS(walls, start, goal, options);
     // throw new Error('DFS not implemented yet');
     case AlgorithmType.BFS:
-      throw new Error('BFS not implemented yet');
+      return solveBFS(walls, start, goal, options);
     case AlgorithmType.Dijkstra:
       throw new Error('Dijkstra not implemented yet');
     case AlgorithmType.AStar:

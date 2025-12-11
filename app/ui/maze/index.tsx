@@ -139,9 +139,7 @@ export default function Maze() {
     }));
   };
 
-  const generateWallsGrid = (
-    walls: string[],
-  ) => {
+  const generateWallsGrid = (walls: string[]) => {
     const grid: boolean[][] = [];
     for (let i = 0; i < row; i++) {
       const rowArr: boolean[] = [];
@@ -166,6 +164,8 @@ export default function Maze() {
   // const [currentStepIndex, setCurrentStepIndex] = useState(0);
   // const algorithmSteps = useRef<AnimationStep[]>([]);
   useEffect(() => {
+    // console.log('status, algorithm, ', status, algorithm);
+    // return;
     if (status === SearchStatus.Running) {
       // Convert grid to 2D array (walls: true = blocked, false = passable)
       const mazeGrid = generateWallsGrid(walls);
@@ -232,7 +232,7 @@ export default function Maze() {
     const colorMap = {
       [StepType.NodeExplored]: 'rgb(100, 149, 237)', // blue
       [StepType.NodeAdded]: 'rgb(200, 100, 255)', // purple
-      [StepType.PathFound]: 'rgb(255, 255, 0)', // yellow 
+      [StepType.PathFound]: 'rgb(255, 255, 0)', // yellow
     };
     const map = new Map<string, string>();
     if (!animator) {

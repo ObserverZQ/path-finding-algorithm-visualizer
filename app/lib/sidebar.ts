@@ -14,13 +14,14 @@ const algorithmsByOptions = {
 } as const;
 
 export const AlgorithmType = {
-  BFS: 'BFS',
-  DFS: 'DFS',
+  BFS: 'Breadth-First Search',
+  DFS: 'Depth-First Search',
   Dijkstra: 'Dijkstra',
   AStar: 'A*',
 } as const;
 
-export type AlgorithmTypeKey = typeof AlgorithmType[keyof typeof AlgorithmType];
+export type AlgorithmTypeKey =
+  (typeof AlgorithmType)[keyof typeof AlgorithmType];
 
 export enum Heuristic {
   Manhattan = 'Manhattan',
@@ -70,7 +71,7 @@ export const defaultWeightedOptions: WeightedOptions = {
 export const defaultHeuristic: Heuristic = Heuristic.Manhattan;
 
 // Create defaults dynamically
-const defaults: OptionsMap = {
+export const defaults: OptionsMap = {
   [AlgorithmType.BFS]: defaultBaseOptions,
   [AlgorithmType.DFS]: defaultBaseOptions,
   [AlgorithmType.Dijkstra]: defaultBaseOptions,
@@ -101,8 +102,8 @@ interface SideBarState {
 
 export const useSideBarStore = create<SideBarState>()((set) => ({
   algorithm: {
-    name: AlgorithmType.DFS,
-    options: defaults[AlgorithmType.DFS],
+    name: AlgorithmType.BFS,
+    options: defaults[AlgorithmType.BFS],
     heuristic: undefined,
   },
   status: SearchStatus.Idle,
