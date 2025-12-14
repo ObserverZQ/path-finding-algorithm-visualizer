@@ -21,9 +21,9 @@ import {
 const plans = ['Manhattan', 'Euclidean', 'Octile', 'Chebyshev'];
 
 export default function AlgorithmSelection() {
-  const [open, setOpen] = useState(false);
-  const [enabled, setEnabled] = useState(false);
-  let [selected, setSelected] = useState(plans[0]);
+  // const [open, setOpen] = useState(false);
+  // const [enabled, setEnabled] = useState(false);
+  // const [selected, setSelected] = useState(plans[0]);
   const {
     algorithm,
     setAlgorithm,
@@ -33,9 +33,6 @@ export default function AlgorithmSelection() {
 
   const algorithms = Object.values(AlgorithmType);
   const heuristics = Object.values(Heuristic);
-  const testToggle = (item) => {
-    console.log('Toggled!', item);
-  };
   const handleAlgorithmChange = (alg: AlgorithmTypeKey) => {
     setTimeout(() => {
       setAlgorithm(alg);

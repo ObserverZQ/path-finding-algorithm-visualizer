@@ -57,7 +57,7 @@ export class Maze {
   width: number;
   height: number;
   walls: Array<Row>;
-  solution: Object;
+  solution: object;
   start: Position;
   goal: Position;
   numExplored: number;

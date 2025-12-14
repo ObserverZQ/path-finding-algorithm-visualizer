@@ -18,7 +18,7 @@ const URLImage = React.memo(function URLImage({
   [key: string]: unknown;
 }) {
   const [image] = useImage(src, 'anonymous');
-  return <Image image={image} {...rest} />;
+  return <Image image={image} alt='' {...rest} />;
 });
 URLImage.displayName = 'URLImage';
 
@@ -245,7 +245,7 @@ export default function Maze() {
       map.set(id, color);
     });
     return map;
-  }, [animator, currentStepIndex, grids]);
+  }, [animator, currentStepIndex]);
 
   return (
     <Stage
