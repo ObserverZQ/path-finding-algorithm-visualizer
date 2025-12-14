@@ -1,3 +1,16 @@
+# Path-Finding Algorithm Visualizer
+
+This project is a web-based interactive visualizer for classic path-finding algorithms, built to support intuitive exploration of search strategies and performance trade-offs.
+
+It allows users to:
+- Edit grids and obstacles interactively
+- Observe step-by-step execution of algorithms
+- Adjust playback speed to compare different search behaviors
+
+The project was inspired by coursework on search algorithms and aims to bridge algorithmic concepts with human-centered visualization.
+
+Tech Stack: React, Next.js, TypeScript, Tailwind CSS
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
