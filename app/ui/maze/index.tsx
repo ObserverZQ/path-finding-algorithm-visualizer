@@ -24,8 +24,8 @@ URLImage.displayName = 'URLImage';
 
 export default function Maze() {
   const gridSize = 40;
-  const row = 15;
-  const col = 20;
+  const row = 12;
+  const col = 22;
   const xBoundary = [0, 40 * (col - 1)];
   const yBoundary = [0, 40 * (row - 1)];
   // use React.useMemo to memoize the draggable shapes to avoid re-render and re-computation.
@@ -70,7 +70,7 @@ export default function Maze() {
       rect.setAttrs({ fill: 'rgb(255,255,255) ' });
       wallsRef.current = wallsRef.current.filter((wall) => wall != id);
     } else if (painting === 'add' || force === 'add') {
-      rect.setAttrs({ fill: 'rgb(179,179,179) ' });
+      rect.setAttrs({ fill: 'rgba(222,225,230,1)' });
       if (!wallsRef.current.includes(id)) {
         wallsRef.current.push(id);
       }
@@ -262,12 +262,17 @@ export default function Maze() {
               name='wall'
               width={gridSize}
               height={gridSize}
-              stroke='grey'
+              stroke='rgba(222,225,230,1)'
               strokeWidth={1}
               id={id}
               fill={colorMap.get(id) || 'rgb(255,255,255)'}
             />
-            <Text text={id} fontSize={12} fontFamily='Calibri' fill='green' />
+            <Text
+              text={id}
+              fontSize={12}
+              fontFamily='Calibri'
+              fill='rgba(100,100,100,1)'
+            />
           </Group>
         ))}
         {/* starting point */}
