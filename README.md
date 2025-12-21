@@ -11,6 +11,8 @@ The project was inspired by coursework on search algorithms and aims to bridge a
 
 Tech Stack: React, Next.js, TypeScript, Tailwind CSS
 
+DEMO: https://path-finding-algorithm-visualizer-gamma.vercel.app/
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
