@@ -9,15 +9,15 @@ export enum SearchStatus {
 
 // Algorithm grouping by option type
 const algorithmsByOptions = {
-  base: ['BFS', 'DFS', 'Dijkstra'] as const,
-  weighted: ['AStar'] as const,
+  base: ['BFS', 'DFS'] as const,
+  weighted: ['Greedy Best-First', 'AStar'] as const,
 } as const;
 
 export const AlgorithmType = {
   BFS: 'Breadth-First Search',
   DFS: 'Depth-First Search',
-  Dijkstra: 'Dijkstra',
-  AStar: 'A*',
+  GreedyBestFirst: 'Greedy Best-First Search',
+  AStar: 'A* Search',
 } as const;
 
 export type AlgorithmTypeKey =
@@ -44,7 +44,7 @@ export interface WeightedOptions extends BaseOptions {
 export type OptionsMap = {
   [AlgorithmType.BFS]: BaseOptions;
   [AlgorithmType.DFS]: BaseOptions;
-  [AlgorithmType.Dijkstra]: BaseOptions;
+  [AlgorithmType.GreedyBestFirst]: WeightedOptions;
   [AlgorithmType.AStar]: WeightedOptions;
 };
 
@@ -74,7 +74,7 @@ export const defaultHeuristic: Heuristic = Heuristic.Manhattan;
 export const defaults: OptionsMap = {
   [AlgorithmType.BFS]: defaultBaseOptions,
   [AlgorithmType.DFS]: defaultBaseOptions,
-  [AlgorithmType.Dijkstra]: defaultBaseOptions,
+  [AlgorithmType.GreedyBestFirst]: defaultWeightedOptions,
   [AlgorithmType.AStar]: defaultWeightedOptions,
 };
 

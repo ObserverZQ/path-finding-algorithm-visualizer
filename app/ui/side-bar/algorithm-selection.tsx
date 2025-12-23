@@ -49,7 +49,8 @@ export default function AlgorithmSelection() {
     // setAlgorithmHeuristic(h);
     console.log('heuristic change test', (h.target as HTMLInputElement).value);
   };
-
+  const needsHeuristic = (alg: AlgorithmTypeKey) =>
+    alg === AlgorithmType.AStar || alg === AlgorithmType.GreedyBestFirst;
   return (
     <div>
       <div className='text-lg font-[600] text-neutral-900'>
@@ -66,7 +67,7 @@ export default function AlgorithmSelection() {
             </AccordionTitle>
             <AccordionContent>
               {/* Show heuristics only for A* */}
-              {alg === AlgorithmType.AStar && (
+              {needsHeuristic(alg) && (
                 <div className='mb-2'>
                   <div className=' text-gray-500 dark:text-gray-400 font-medium'>
                     Heuristics

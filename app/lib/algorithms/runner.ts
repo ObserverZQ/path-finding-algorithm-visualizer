@@ -15,10 +15,10 @@ export const runAlgorithm = (
     // throw new Error('DFS not implemented yet');
     case AlgorithmType.BFS:
       return solveBFS(walls, start, goal, options);
-    case AlgorithmType.Dijkstra:
-      throw new Error('Dijkstra not implemented yet');
+    case AlgorithmType.GreedyBestFirst:
+      throw new Error('Greedy Best-First Search not implemented yet');
     case AlgorithmType.AStar:
-      throw new Error('A* not implemented yet');
+      throw new Error('A* Search not implemented yet');
     default:
       throw new Error(`Unknown algorithm: ${algorithm}`);
   }
