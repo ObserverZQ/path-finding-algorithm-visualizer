@@ -58,44 +58,6 @@ export default function AlgorithmSelection() {
       <div className='text-sm text-neutral-600'>
         Choose a path-finding algorithm and its setting.
       </div>
-      {
-        // algorithms.map((alg) => (
-        //     <div key={alg}>
-        //         <Button onClick={() => handleAlgorithmChange(alg)}>{alg}</Button>
-        //         {alg === algorithm.name && <div>
-        //             <div className="transition duration-100 ease-in data-closed:opacity-0
-        //     bg-white rounded-s-md p-2 mt-1 border-neutral-300 border">
-        //                 {/* <div>Heuristics</div>
-        //         <RadioGroup value={selected} onChange={setSelected} aria-label="Server size">
-        //             {plans.map((plan) => (
-        //                 <Field key={plan} className="flex items-center gap-2">
-        //                     <Radio
-        //                         value={plan}
-        //                         className="group flex size-5 items-center justify-center rounded-full border bg-white data-checked:bg-primary-500"
-        //                     >
-        //                         <span className="invisible size-2 rounded-full bg-white group-data-checked:visible" />
-        //                     </Radio>
-        //                     <Label>{plan}</Label>
-        //                 </Field>
-        //             ))}
-        //         </RadioGroup> */}
-        //                 <div>Options</div>
-        //                 {algorithm.name}
-        //                 {Object.keys(algorithm.options).map((key) => (
-        //                     <div className="flex items-center gap-2" key={key}>
-        //                         <Checkbox
-        //                             id={`opt-${key}`}
-        //                             checked={Boolean((algorithm.options as any)[key])}
-        //                             onChange={(e) => handleOptionChange(key, (e as React.ChangeEvent<HTMLInputElement>).target.checked)}
-        //                         />
-        //                         <Label htmlFor={`opt-${key}`}>{key}</Label>
-        //                     </div>
-        //                 ))}
-        //             </div>
-        //         </div>}
-        //     </div >
-        // ))
-      }
       <Accordion>
         {algorithms.map((alg) => (
           <AccordionPanel key={alg}>
@@ -144,6 +106,7 @@ export default function AlgorithmSelection() {
                   ) : (
                     <Checkbox
                       id={`opt-${key}`}
+                      disabled
                       checked={Boolean((algorithm.options as any)[key])}
                       onChange={(e) =>
                         handleOptionChange(
