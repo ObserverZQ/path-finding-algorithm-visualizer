@@ -1,5 +1,6 @@
 import { AnimationStep, StepType } from '../animation/types';
 import type { Row, Position } from './types';
+import { Frontier } from './frontier';
 
 export class Cell {
   state: Position;
@@ -68,7 +69,7 @@ export class Maze {
     return result;
   }
 
-  solve(FrontierClass: typeof StackFrontier = StackFrontier): void {
+  solve(FrontierClass: new (cells: Cell[]) => Frontier): void {
     // Keep track of number of states explored
     this.numExplored = 0;
     const start = new Cell(this.start, undefined, '');
