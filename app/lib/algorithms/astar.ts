@@ -44,4 +44,47 @@ export class AStarMaze extends Maze {
   }
 
   // todo: solveAStar method implementation
+  solveInformed(heuristicType: string, useAStar: boolean = true): void {
+    // Implementation of A* algorithm goes here
+  }
 }
+
+export const solveAStar = (
+  walls: boolean[][],
+  start: [number, number],
+  goal: [number, number],
+  options: any
+): any => {
+  const height = walls.length;
+  const width = walls[0].length;
+  const maze = new AStarMaze(width, height, start, goal, walls);
+  maze.start = start;
+  maze.goal = goal;
+
+  // todo: Implement A* algorithm with the specified heuristic
+  return {
+    path: (maze.solution as any).cells,
+    nodesExplored: maze.numExplored,
+    steps: maze.steps,
+  };
+};
+
+export const solveGreedyBestFirst = (
+  walls: boolean[][],
+  start: [number, number],
+  goal: [number, number],
+  options: any
+): any => {
+  const height = walls.length;
+  const width = walls[0].length;
+  const maze = new AStarMaze(width, height, start, goal, walls);
+  maze.start = start;
+  maze.goal = goal;
+
+  // todo: Implement A* algorithm with the specified heuristic
+  return {
+    path: (maze.solution as any).cells,
+    nodesExplored: maze.numExplored,
+    steps: maze.steps,
+  };
+};
