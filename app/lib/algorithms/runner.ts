@@ -1,6 +1,7 @@
 import { AlgorithmType, AlgorithmTypeKey } from '@/app/lib/sidebar';
 import { AnimationResult, AnimationStep } from '@/app/lib/animation/types';
 import { solveDFS, solveBFS } from './dfs';
+import { solveAStar, solveGreedyBestFirst } from './astar';
 
 export const runAlgorithm = (
   algorithm: AlgorithmTypeKey,
@@ -12,13 +13,12 @@ export const runAlgorithm = (
   switch (algorithm) {
     case AlgorithmType.DFS:
       return solveDFS(walls, start, goal, options);
-    // throw new Error('DFS not implemented yet');
     case AlgorithmType.BFS:
       return solveBFS(walls, start, goal, options);
     case AlgorithmType.GreedyBestFirst:
-      throw new Error('Greedy Best-First Search not implemented yet');
+      return solveGreedyBestFirst(walls, start, goal, options);
     case AlgorithmType.AStar:
-      throw new Error('A* Search not implemented yet');
+      return solveAStar(walls, start, goal, options);
     default:
       throw new Error(`Unknown algorithm: ${algorithm}`);
   }

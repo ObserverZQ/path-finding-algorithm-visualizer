@@ -182,7 +182,7 @@ export default function Maze() {
         mazeGrid,
         [points.start.i, points.start.j],
         [points.goal.i, points.goal.j],
-        algorithm.options
+        { ...algorithm.options, heuristic: algorithm.heuristic }
       );
       console.log('Algorithm result:', result);
       const animator = new Animator(result);

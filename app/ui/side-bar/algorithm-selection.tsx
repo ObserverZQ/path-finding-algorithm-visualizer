@@ -15,6 +15,7 @@ import {
   AlgorithmTypeKey,
   defaults,
   Heuristic,
+  defaultHeuristic,
   useSideBarStore,
 } from '@/app/lib/sidebar';
 
@@ -34,20 +35,23 @@ export default function AlgorithmSelection() {
   const algorithms = Object.values(AlgorithmType);
   const heuristics = Object.values(Heuristic);
   const handleAlgorithmChange = (alg: AlgorithmTypeKey) => {
-    setTimeout(() => {
-      setAlgorithm(alg);
-      console.log('Selected algorithm:', alg, algorithm.name);
-    }, 50);
+    setAlgorithm(alg);
+    console.log('Selected algorithm:', alg);
   };
 
-  const handleOptionChange = (key: string, value: boolean) => {
-    console.log('Option changed:', key, value);
-    setAlgorithmOptions(algorithm.name, { [key]: value } as any);
+  const handleOptionChange = (
+    alg: AlgorithmTypeKey,
+    key: string,
+    value: any
+  ) => {
+    console.log('Option changed:', alg, key, value);
+    setAlgorithmOptions(alg, { [key]: value } as any);
   };
 
-  const handleHeuristicChange = (h: React.FocusEvent<HTMLDivElement>) => {
-    // setAlgorithmHeuristic(h);
-    console.log('heuristic change test', (h.target as HTMLInputElement).value);
+  const handleHeuristicChange = (alg: AlgorithmTypeKey, h: Heuristic) => {
+    // ensure algorithm is selected then set heuristic
+    setAlgorithm(alg);
+    setAlgorithmHeuristic(h);
   };
   const needsHeuristic = (alg: AlgorithmTypeKey) =>
     alg === AlgorithmType.AStar || alg === AlgorithmType.GreedyBestFirst;
@@ -72,55 +76,70 @@ export default function AlgorithmSelection() {
                   <div className=' text-gray-500 dark:text-gray-400 font-medium'>
                     Heuristics
                   </div>
-                  {heuristics.map((h) => (
-                    <div className='flex items-center gap-2 mb-2' key={h}>
-                      <Radio
-                        id={`heuristic-${h}`}
-                        name='heuristics'
-                        value={h}
-                        checked={algorithm.heuristic === h}
-                        onChange={() => setAlgorithmHeuristic(h)}
-                      />
-                      <Label htmlFor={`heuristic-${h}`}>{h}</Label>
-                    </div>
-                  ))}
+                  {heuristics.map((h) => {
+                    const currentHeuristic =
+                      alg === algorithm.name
+                        ? algorithm.heuristic ?? defaultHeuristic
+                        : defaultHeuristic;
+                    return (
+                      <div className='flex items-center gap-2 mb-2' key={h}>
+                        <Radio
+                          id={`heuristic-${h}`}
+                          name={`heuristics-${alg}`}
+                          value={h}
+                          checked={currentHeuristic === h}
+                          onChange={() => handleHeuristicChange(alg, h)}
+                        />
+                        <Label htmlFor={`heuristic-${h}`}>{h}</Label>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
               <div className='text-gray-500 dark:text-gray-400'>Options</div>
-              {Object.keys(defaults[alg]).map((key) => (
-                <div className='flex items-center gap-2' key={key}>
-                  {key === 'weight' ? (
-                    <TextInput
-                      id={`opt-${key}`}
-                      type='text'
-                      sizing='sm'
-                      value={(algorithm.options as any)[key] ?? 0}
-                      onChange={(e) =>
-                        handleOptionChange(
-                          key,
-                          parseFloat(e.target.value) as any
-                        )
-                      }
-                      className='w-10 mt-0 py-1'
-                    />
-                  ) : (
-                    <Checkbox
-                      id={`opt-${key}`}
-                      disabled
-                      checked={Boolean((algorithm.options as any)[key])}
-                      onChange={(e) =>
-                        handleOptionChange(
-                          key,
-                          (e as React.ChangeEvent<HTMLInputElement>).target
-                            .checked
-                        )
-                      }
-                    />
-                  )}
-                  <Label htmlFor={`opt-${key}`}>{key}</Label>
-                </div>
-              ))}
+              {Object.keys(defaults[alg]).map((key) => {
+                const defaultVal = (defaults as any)[alg][key];
+                const optionValue =
+                  alg === algorithm.name
+                    ? (algorithm.options as any)[key] ?? defaultVal
+                    : defaultVal;
+                return (
+                  <div className='flex items-center gap-2' key={key}>
+                    {key === 'weight' ? (
+                      <TextInput
+                        id={`opt-${key}`}
+                        type='text'
+                        sizing='sm'
+                        value={optionValue ?? 0}
+                        onChange={(e) =>
+                          handleOptionChange(
+                            alg,
+                            key,
+                            parseFloat(e.target.value) as any
+                          )
+                        }
+                        className='w-10 mt-0 py-1'
+                      />
+                    ) : (
+                      <Checkbox
+                        id={`opt-${key}`}
+                        disabled
+                        checked={Boolean(optionValue)}
+                        onChange={(e) =>
+                          handleOptionChange(
+                            alg,
+                            key,
+                            (e as React.ChangeEvent<HTMLInputElement>).target
+                              .checked
+                          )
+                        }
+                      />
+                    )}
+                    <Label htmlFor={`opt-${key}`}>{key}</Label>
+                  </div>
+                );
+              })}
             </AccordionContent>
           </AccordionPanel>
         ))}

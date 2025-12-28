@@ -8,12 +8,6 @@ import AlgorithmSelection from './algorithm-selection';
 import AnimationControl from './animation-control';
 
 export default function SideBar() {
-
-  const { status, setStatus } = useSideBarStore();
-  const changeSearchStatus = () => {
-    setStatus(status === SearchStatus.Idle ? SearchStatus.Running : SearchStatus.Idle);
-  };
-
   return (
     <div className='w-[378px] h-full bg-neutral-200 border-l-1 border-l-neutral-400 p-7 flex flex-col'>
       <AlgorithmSelection />
@@ -28,7 +22,6 @@ export default function SideBar() {
     </div>
   );
 }
-
 
 // export default function SideBar() {
 //     return <div><Counter /></div>

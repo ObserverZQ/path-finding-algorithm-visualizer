@@ -85,7 +85,11 @@ const usesWeight = (name: AlgorithmTypeKey): boolean => {
 
 // Helper to check if algorithm supports heuristics
 const supportsHeuristic = (name: AlgorithmTypeKey): boolean => {
-  return name === AlgorithmType.AStar;
+  const informedSearchAlgorithms: AlgorithmTypeKey[] = [
+    AlgorithmType.AStar,
+    AlgorithmType.GreedyBestFirst,
+  ];
+  return informedSearchAlgorithms.includes(name);
 };
 
 interface SideBarState {
@@ -118,6 +122,7 @@ export const useSideBarStore = create<SideBarState>()((set) => ({
       options: defaults[alg as keyof typeof defaults],
       heuristic: supportsHeuristic(alg) ? defaultHeuristic : undefined,
     };
+    console.log('Setting algorithm to:', algorithm);
     set({ algorithm });
   },
 
