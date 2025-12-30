@@ -9,6 +9,7 @@ import { SearchStatus, useSideBarStore } from '@/app/lib/sidebar';
 import { AnimationStep, StepType } from '@/app/lib/animation/types';
 import { runAlgorithm } from '@/app/lib/algorithms/runner';
 import { Animator } from '@/app/lib/animation/animator';
+import { mazeEvents } from '@/app/lib/mazeEvents';
 
 const URLImage = React.memo(function URLImage({
   src,
@@ -247,6 +248,25 @@ export default function Maze() {
     return map;
   }, [animator, currentStepIndex]);
 
+  // listen to clear path and clear all events
+  useEffect(() => {
+    const unsubscribePath = mazeEvents.on('clearPath', () => {
+      // setWalls([]);
+      setAnimator(null);
+      // reset wall-related state
+    });
+
+    const unsubscribeAll = mazeEvents.on('clearAll', () => {
+      // setWalls([]);
+      // reset all state
+      setAnimator(null);
+    });
+
+    return () => {
+      unsubscribePath();
+      unsubscribeAll();
+    };
+  }, []);
   return (
     <Stage
       width={900}
