@@ -34,9 +34,13 @@ export default function AnimationControl() {
         Animation Control
       </div>
       <div className='mt-4 flex gap-2'>
-        <Button as='span' className='w-[50%]' onClick={changeSearchStatus}>
+        <Button
+          className='w-[50%]'
+          disabled={status === SearchStatus.Running}
+          onClick={changeSearchStatus}
+        >
           <VscPlay className='w-5 h-5 mr-2' />
-          {status === SearchStatus.Idle ? 'Run' : 'Cancel'}
+          Run
         </Button>
         <Button as='span' className='w-[50%]' color='green'>
           <VscDebugContinue className='w-5 h-5 mr-2' />

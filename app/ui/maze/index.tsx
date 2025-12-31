@@ -52,6 +52,7 @@ export default function Maze() {
     start: { i: 6, j: 3 },
     goal: { i: 6, j: 15 },
   });
+  const stageLayerRef = useRef(null);
   const [painting, setPainting] = useState('');
   const [walls, setWalls] = useState<string[]>([]);
   const wallsRef = useRef<string[]>([]);
@@ -168,6 +169,8 @@ export default function Maze() {
     // console.log('status, algorithm, ', status, algorithm);
     // return;
     if (status === SearchStatus.Running) {
+      // clear previous path and steps on grids
+      clearPaths();
       // Convert grid to 2D array (walls: true = blocked, false = passable)
       const mazeGrid = generateWallsGrid(walls);
       console.log('maze grid:', mazeGrid);
@@ -212,9 +215,9 @@ export default function Maze() {
         setCurrentStepIndex((prev) => {
           const next = Math.min(prev + 1, animator.result.steps.length - 1);
           if (next >= animator.result.steps.length - 1) {
-            setTimeout(() => setStatus(SearchStatus.Completed), 0);
+            setTimeout(() => setStatus(SearchStatus.Idle), 0);
           }
-          console.log('Current Step Index:', next);
+          // console.log('Current Step Index:', next);
           return next;
         });
         lastUpdateTime = now;
@@ -249,17 +252,24 @@ export default function Maze() {
   }, [animator, currentStepIndex]);
 
   // listen to clear path and clear all events
+  const clearPaths = () => {
+    setAnimator(null);
+  };
   useEffect(() => {
-    const unsubscribePath = mazeEvents.on('clearPath', () => {
-      // setWalls([]);
-      setAnimator(null);
-      // reset wall-related state
-    });
+    const unsubscribePath = mazeEvents.on('clearPath', clearPaths);
 
     const unsubscribeAll = mazeEvents.on('clearAll', () => {
-      // setWalls([]);
-      // reset all state
-      setAnimator(null);
+      // clear the path and steps
+      clearPaths();
+      const layer = stageLayerRef.current as any;
+      if (layer) {
+        const groups = layer.children;
+        groups.forEach((gp: any) => {
+          if (gp.children && gp.children.length > 1) {
+            gp?.children[0]?.setAttrs({ fill: 'rgb(255,255,255) ' });
+          }
+        });
+      }
     });
 
     return () => {
@@ -275,7 +285,7 @@ export default function Maze() {
       onMouseUp={onStageMouseUp}
       onMouseMove={onStageMouseMove}
     >
-      <Layer>
+      <Layer ref={stageLayerRef}>
         {grids.map(({ id, x, y }) => (
           <Group x={x} y={y} key={id}>
             <Rect
