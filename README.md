@@ -3,7 +3,7 @@
 This project is a web-based interactive visualizer for classic path-finding algorithms, built to support intuitive exploration of search strategies and performance trade-offs.
 
 It allows users to:
-- Explore algorithms including breadth-first search, depth-first search, greedy best-first search, and A* search.
+- Explore algorithms including breadth-first search, depth-first search, greedy best-first search, and A* search
 - Edit grids and obstacles interactively
 - Observe step-by-step execution of algorithms(WIP)
 - Adjust playback speed to compare different search behaviors
