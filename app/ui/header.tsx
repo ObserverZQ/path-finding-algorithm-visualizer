@@ -39,8 +39,8 @@ export default function Header() {
         <ModalHeader className='text-center'>Intro</ModalHeader>
         <ModalBody>
           <div className='space-y-6 text-base leading-relaxed text-gray-800 dark:text-gray-400'>
-            Welcome to Kerry's Path-Finding Algorithm Visualizer! Here are the
-            three simple steps to explore divergent path-finding algorithms:
+            Welcome to Kerry&apos;s Path-Finding Algorithm Visualizer! Here are
+            the three simple steps to explore divergent path-finding algorithms:
             <p>
               1.Set up the Maze i. Click and drag along blank cells or
               wall⬜️cells to toggle them between empty and wall spaces. ii.Drag
