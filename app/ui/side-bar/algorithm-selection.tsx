@@ -60,20 +60,23 @@ export default function AlgorithmSelection() {
       <div className='text-lg font-[600] text-neutral-900'>
         Algorithm Selection
       </div>
-      <div className='text-sm text-neutral-600'>
+      <div className='text-sm text-neutral-600 mb-2'>
         Choose a path-finding algorithm and its setting.
       </div>
       <Accordion>
         {algorithms.map((alg) => (
           <AccordionPanel key={alg}>
-            <AccordionTitle onFocus={() => handleAlgorithmChange(alg)}>
+            <AccordionTitle
+              className='p-3 text-sm'
+              onFocus={() => handleAlgorithmChange(alg)}
+            >
               {alg}
             </AccordionTitle>
             <AccordionContent>
               {/* Show heuristics only for A* */}
               {needsHeuristic(alg) && (
                 <div className='mb-2'>
-                  <div className=' text-gray-500 dark:text-gray-400 font-medium'>
+                  <div className='text-sm text-neutral-900 dark:text-gray-400'>
                     Heuristics
                   </div>
                   {heuristics.map((h) => {
@@ -97,7 +100,9 @@ export default function AlgorithmSelection() {
                 </div>
               )}
 
-              <div className='text-gray-500 dark:text-gray-400'>Options</div>
+              <div className='text-sm text-neutral-900 dark:text-gray-400'>
+                Options
+              </div>
               {Object.keys(defaults[alg]).map((key) => {
                 const defaultVal = (defaults as any)[alg][key];
                 const optionValue =
