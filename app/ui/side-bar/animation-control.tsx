@@ -16,6 +16,11 @@ export default function AnimationControl() {
       status === SearchStatus.Idle ? SearchStatus.Running : SearchStatus.Idle
     );
   };
+  const onClickManualStep = () => {
+    window.alert(
+      'Manual Step work in progress. Thank you for your patience.:D'
+    );
+  };
 
   const onClickClearPath = () => {
     // Custom logic to clear only the path
@@ -42,7 +47,11 @@ export default function AnimationControl() {
           <VscPlay className='w-5 h-5 mr-2' />
           Run
         </Button>
-        <Button as='span' className='w-[50%] bg-secondary-500'>
+        <Button
+          as='span'
+          className='w-[50%] bg-secondary-500'
+          onClick={onClickManualStep}
+        >
           <VscDebugContinue className='w-5 h-5 mr-2' />
           Manual Step
         </Button>
