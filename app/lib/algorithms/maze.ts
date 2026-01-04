@@ -73,6 +73,7 @@ export class Maze {
 
   solve(FrontierClass: new (cells: Cell[]) => Frontier): void {
     // Keep track of number of states explored
+    const startTime = performance.now();
     this.numExplored = 0;
     const start = new Cell(this.start, undefined, '');
     console.log('start', start);
@@ -117,7 +118,8 @@ export class Maze {
             position: pos,
           });
         });
-
+        const endTime = performance.now();
+        this.runtime = endTime - startTime;
         return;
       }
 

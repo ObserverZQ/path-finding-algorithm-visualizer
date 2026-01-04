@@ -59,6 +59,7 @@ export type Algorithm = {
 type Metrics = {
   runtime: number;
   operations: number;
+  visitedNodes: number;
   pathLength: number;
 };
 
@@ -119,7 +120,7 @@ export const useSideBarStore = create<SideBarState>()((set) => ({
     heuristic: undefined,
   },
   status: SearchStatus.Idle,
-  metrics: { runtime: 0, operations: 0, pathLength: 0 },
+  metrics: { runtime: 0, operations: 0, visitedNodes: 0, pathLength: 0 },
   setStatus(status: SearchStatus) {
     set({ status });
   },

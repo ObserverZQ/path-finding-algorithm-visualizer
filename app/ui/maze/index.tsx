@@ -193,6 +193,7 @@ export default function Maze() {
       setMetrics({
         runtime: result.runtime || 0,
         operations: result.steps?.length || 0,
+        visitedNodes: result.nodesExplored || 0,
         pathLength: result.path?.length || 0,
       });
       const animator = new Animator(result);

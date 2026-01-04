@@ -21,6 +21,7 @@ export const solveDFS = (
     path: (maze.solution as any).cells,
     nodesExplored: maze.numExplored,
     steps: maze.steps,
+    runtime: maze.runtime,
   };
 };
 
@@ -43,5 +44,6 @@ export const solveBFS = (
     path: (maze.solution as any).cells,
     nodesExplored: maze.numExplored,
     steps: maze.steps,
+    runtime: maze.runtime,
   };
 };

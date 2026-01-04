@@ -18,6 +18,10 @@ export default function Trace() {
           <div className='text-neutral-900'>{metrics.operations}</div>
         </div>
         <div>
+          Visited Nodes:{' '}
+          <div className='text-neutral-900'>{metrics.visitedNodes}</div>
+        </div>
+        <div>
           Path Length:{' '}
           <div className='text-neutral-900'>{metrics.pathLength}</div>
         </div>

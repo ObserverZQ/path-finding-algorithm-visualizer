@@ -11,7 +11,7 @@ This project was inspired by Harvard’s CS50 Introduction to Artificial Intelli
 
 * **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, and modify playback speed to observe how different algorithms navigate constraints.
 
-* **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, and Path Length, providing empirical data to support theoretical complexity analysis.
+* **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, Visited Nodes, and Path Length, providing empirical data to support theoretical complexity analysis.
 
 ## 🏗 Technical Implementation
 * **State Management**: Built with zustand to ensure the search frontier and explored sets stay synchronized with the UI during high-speed animations.
