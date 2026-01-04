@@ -23,6 +23,7 @@ export class Maze {
   goal: Position;
   numExplored: number;
   steps: AnimationStep[];
+  runtime: number;
 
   constructor(
     width: number,
@@ -39,6 +40,7 @@ export class Maze {
     this.solution = {};
     this.numExplored = 0;
     this.steps = [];
+    this.runtime = 0;
   }
 
   neighbors(state: Position): Record<string, Position> {

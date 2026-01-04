@@ -48,6 +48,8 @@ export class AStarMaze extends Maze {
     this.numExplored = 0;
     this.steps = [];
 
+    const startTime = performance.now();
+
     const startCell = new AStarCell(
       this.start,
       undefined,
@@ -104,7 +106,9 @@ export class AStarMaze extends Maze {
             position: pos,
           });
         });
-
+        const endTime = performance.now();
+        this.runtime = endTime - startTime;
+        console.log('Runtime:', this.runtime);
         return;
       }
 
@@ -162,6 +166,7 @@ export const solveAStar = (
     path: (maze.solution as any).cells,
     nodesExplored: maze.numExplored,
     steps: maze.steps,
+    runtime: maze.runtime,
   };
 };
 
@@ -181,5 +186,6 @@ export const solveGreedyBestFirst = (
     path: (maze.solution as any).cells,
     nodesExplored: maze.numExplored,
     steps: maze.steps,
+    runtime: maze.runtime,
   };
 };

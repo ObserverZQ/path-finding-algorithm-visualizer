@@ -56,6 +56,12 @@ export type Algorithm = {
   heuristic?: Heuristic; // Only for A* currently
 };
 
+type Metrics = {
+  runtime: number;
+  operations: number;
+  pathLength: number;
+};
+
 // Default options
 export const defaultBaseOptions: BaseOptions = {
   allowDiagonal: false,
@@ -95,6 +101,7 @@ const supportsHeuristic = (name: AlgorithmTypeKey): boolean => {
 interface SideBarState {
   algorithm: Algorithm;
   status: SearchStatus;
+  metrics: Metrics;
   setStatus: (status: SearchStatus) => void;
   setAlgorithm: (alg: AlgorithmTypeKey) => void;
   setAlgorithmOptions: (
@@ -102,6 +109,7 @@ interface SideBarState {
     opts: Partial<OptionsUnion>
   ) => void;
   setAlgorithmHeuristic: (heuristic: Heuristic) => void;
+  setMetrics: (metrics: Metrics) => void;
 }
 
 export const useSideBarStore = create<SideBarState>()((set) => ({
@@ -111,7 +119,7 @@ export const useSideBarStore = create<SideBarState>()((set) => ({
     heuristic: undefined,
   },
   status: SearchStatus.Idle,
-
+  metrics: { runtime: 0, operations: 0, pathLength: 0 },
   setStatus(status: SearchStatus) {
     set({ status });
   },
@@ -143,5 +151,9 @@ export const useSideBarStore = create<SideBarState>()((set) => ({
     set((state) => ({
       algorithm: { ...state.algorithm, heuristic },
     }));
+  },
+
+  setMetrics: (metrics: Metrics) => {
+    set({ metrics });
   },
 }));

@@ -49,8 +49,8 @@ export default function Maze() {
   const coordToPx = (coord: number) => coord * gridSize;
   const pxToCoord = (px: number) => px / gridSize;
   const [points, setPoints] = useState({
-    start: { i: 6, j: 3 },
-    goal: { i: 6, j: 15 },
+    start: { i: 5, j: 7 },
+    goal: { i: 5, j: 13 },
   });
   const stageLayerRef = useRef(null);
   const [painting, setPainting] = useState('');
@@ -160,9 +160,10 @@ export default function Maze() {
   /**
    * Listens to SideBar Control Events
    */
-  const { status, algorithm, setStatus } = useSideBarStore();
+  const { status, algorithm, setStatus, setMetrics } = useSideBarStore();
   const [animator, setAnimator] = useState<Animator | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
   // const [currentStepIndex, setCurrentStepIndex] = useState(0);
   // const algorithmSteps = useRef<AnimationStep[]>([]);
   useEffect(() => {
@@ -189,6 +190,11 @@ export default function Maze() {
         { ...algorithm.options, heuristic: algorithm.heuristic }
       );
       console.log('Algorithm result:', result);
+      setMetrics({
+        runtime: result.runtime || 0,
+        operations: result.steps?.length || 0,
+        pathLength: result.path?.length || 0,
+      });
       const animator = new Animator(result);
       setAnimator(animator);
       // setCurrentStepIndex(0);
@@ -280,7 +286,7 @@ export default function Maze() {
   return (
     <Stage
       width={900}
-      height={600}
+      height={500}
       onMouseDown={onStageMouseDown}
       onMouseUp={onStageMouseUp}
       onMouseMove={onStageMouseMove}
