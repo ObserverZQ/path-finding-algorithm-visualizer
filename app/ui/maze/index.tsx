@@ -241,9 +241,9 @@ export default function Maze() {
   // Memoize color calculation
   const colorMap = useMemo(() => {
     const colorMap = {
-      [StepType.NodeExplored]: 'rgb(100, 149, 237)', // blue
-      [StepType.NodeAdded]: 'rgb(200, 100, 255)', // purple
-      [StepType.PathFound]: 'rgb(255, 255, 0)', // yellow
+      [StepType.NodeAdded]: 'rgb(230, 255, 251)',
+      [StepType.NodeExplored]: '#B2EBF2',
+      [StepType.PathFound]: '#FFD70F',
     };
     const map = new Map<string, string>();
     if (!animator) {
@@ -308,7 +308,7 @@ export default function Maze() {
               text={id}
               fontSize={12}
               fontFamily='Calibri'
-              fill='rgba(100,100,100,1)'
+              fill='rgba(150,150,150,1)'
             />
           </Group>
         ))}
