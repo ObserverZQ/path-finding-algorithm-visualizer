@@ -198,7 +198,7 @@ export default function Maze() {
       });
       const animator = new Animator(result);
       setAnimator(animator);
-      // setCurrentStepIndex(0);
+      setCurrentStepIndex(0);
       // algorithmSteps.current = result.steps;
       console.log('animator', animator);
       // animator.play();
