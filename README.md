@@ -14,7 +14,7 @@ This project was inspired by Harvard’s CS50 Introduction to Artificial Intelli
 * **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, and Path Length, providing empirical data to support theoretical complexity analysis.
 
 ## 🏗 Technical Implementation
-* **State Management**: Built with zustand t to ensure the search frontier and explored sets stay synchronized with the UI during high-speed animations.
+* **State Management**: Built with zustand to ensure the search frontier and explored sets stay synchronized with the UI during high-speed animations.
 
 * **Modular Design**: Structured the codebase to allow for easy extensibility of new heuristic functions, such as Manhattan or Euclidean distance for A* Search.
 
