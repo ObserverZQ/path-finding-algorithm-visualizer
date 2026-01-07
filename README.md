@@ -4,12 +4,12 @@ An interactive canvas-based tool designed to visualize the mechanics and efficie
 [Live Demo](https://path-finding-algorithm-visualizer-gamma.vercel.app/)
 
 ## 🎓 Motivation
-This project was inspired by Harvard’s CS50 Introduction to Artificial Intelligence with Python, specifically the lecture on Search. I wanted to translate the abstract concepts of frontier expansion and heuristic-based search (A*) into a tangible, interactive frontend experience to better understand the performance trade-offs in real-time.
+This project was inspired by Harvard’s [CS50 Introduction to Artificial Intelligence with Python](https://cs50.harvard.edu/ai/), specifically the lecture on [Search](https://cs50.harvard.edu/ai/weeks/0/). I wanted to translate the abstract concepts of frontier expansion and heuristic-based search (A*) into a tangible, interactive frontend experience to better understand the performance trade-offs in real-time.
 
 ## 🛠 Core Functionality
 * **Search Suite**: Implements Breadth-First Search (BFS), Depth-First Search (DFS), Greedy Best-First Search, and A* Search.
 
-* **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, and modify playback speed to observe how different algorithms navigate constraints.
+* **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, modify playback speed and choose running mode(continuously or step-by-step) to observe how different algorithms navigate constraints.
 
 * **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, Visited Nodes, and Path Length, providing empirical data to support theoretical complexity analysis.
 

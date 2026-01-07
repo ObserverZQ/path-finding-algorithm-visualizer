@@ -129,7 +129,6 @@ export default function AlgorithmSelection() {
                     ) : (
                       <Checkbox
                         id={`opt-${key}`}
-                        disabled
                         checked={Boolean(optionValue)}
                         onChange={(e) =>
                           handleOptionChange(
