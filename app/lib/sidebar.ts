@@ -32,7 +32,7 @@ export enum Heuristic {
 
 // Option type definitions
 export interface BaseOptions {
-  allowDiagonal: boolean;
+  // allowDiagonal: boolean;
   biDirectional: boolean;
   // doNotCrossCorners: boolean;
 }
@@ -65,7 +65,7 @@ type Metrics = {
 
 // Default options
 export const defaultBaseOptions: BaseOptions = {
-  allowDiagonal: false,
+  // allowDiagonal: false,
   biDirectional: false,
   // doNotCrossCorners: false,
 };

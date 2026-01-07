@@ -44,12 +44,29 @@ export class AStarMaze extends Maze {
     }
   }
 
-  informedSearch(heuristicType: string, useAStar: boolean = true): void {
+  informedSearch(
+    heuristicType: string,
+    useAStar: boolean = true,
+    options: any
+  ): void {
     this.numExplored = 0;
     this.steps = [];
 
     const startTime = performance.now();
+    if (options.biDirectional) {
+      this.biDirectionalSearch(heuristicType, useAStar);
+    } else {
+      this.uniDirectionalInformedSearch(heuristicType, useAStar);
+    }
+    const endTime = performance.now();
+    this.runtime = endTime - startTime;
+    console.log('Runtime:', this.runtime);
+  }
 
+  private uniDirectionalInformedSearch(
+    heuristicType: string,
+    useAStar: boolean
+  ): void {
     const startCell = new AStarCell(
       this.start,
       undefined,
@@ -86,29 +103,7 @@ export class AStarMaze extends Maze {
 
       // Check if goal reached, return if so
       if (cell.state[0] === this.goal[0] && cell.state[1] === this.goal[1]) {
-        const actions = [];
-        const cells = [];
-        let current: Cell | undefined = cell;
-
-        while (current?.parent) {
-          actions.push(current.action);
-          cells.push(current.state);
-          current = current.parent;
-        }
-
-        actions.reverse();
-        cells.reverse();
-        this.solution = { actions, cells };
-
-        cells.forEach((pos) => {
-          this.steps.push({
-            type: StepType.PathFound,
-            position: pos,
-          });
-        });
-        const endTime = performance.now();
-        this.runtime = endTime - startTime;
-        console.log('Runtime:', this.runtime);
+        this.reconstructPath(cell);
         return;
       }
 
@@ -148,6 +143,202 @@ export class AStarMaze extends Maze {
 
     throw new Error('no solution');
   }
+  private reconstructPath(cell: Cell): void {
+    const actions = [];
+    const cells = [];
+    let current: Cell | undefined = cell;
+
+    while (current?.parent) {
+      actions.push(current.action);
+      cells.push(current.state);
+      current = current.parent;
+    }
+
+    actions.reverse();
+    cells.reverse();
+    this.solution = { actions, cells };
+
+    cells.forEach((pos) => {
+      this.steps.push({
+        type: StepType.PathFound,
+        position: pos,
+      });
+    });
+  }
+  private biDirectionalSearch(heuristicType: string, useAStar: boolean): void {
+    const startCell = new AStarCell(
+      this.start,
+      undefined,
+      '',
+      0,
+      this.getHeuristic(this.start, heuristicType)
+    );
+
+    const goalCell = new AStarCell(
+      this.goal,
+      undefined,
+      '',
+      0,
+      this.getHeuristic(this.goal, heuristicType)
+    );
+
+    const frontierStart: AStarCell[] = [startCell];
+    const frontierGoal: AStarCell[] = [goalCell];
+    const exploredStart = new Set<string>();
+    const exploredGoal = new Set<string>();
+    const cellMapStart = new Map<string, AStarCell>();
+    const cellMapGoal = new Map<string, AStarCell>();
+
+    cellMapStart.set(`${this.start[0]},${this.start[1]}`, startCell);
+    cellMapGoal.set(`${this.goal[0]},${this.goal[1]}`, goalCell);
+
+    while (frontierStart.length > 0 && frontierGoal.length > 0) {
+      // Expand from start
+      const meetPoint = this.expandBiDirectional(
+        frontierStart,
+        exploredStart,
+        cellMapStart,
+        exploredGoal,
+        cellMapGoal,
+        heuristicType,
+        useAStar,
+        true
+      );
+
+      if (meetPoint) {
+        this.reconstructBiDirectionalPath(
+          meetPoint.startCell,
+          meetPoint.goalCell
+        );
+        return;
+      }
+
+      // Expand from goal
+      const meetPoint2 = this.expandBiDirectional(
+        frontierGoal,
+        exploredGoal,
+        cellMapGoal,
+        exploredStart,
+        cellMapStart,
+        heuristicType,
+        useAStar,
+        false
+      );
+      if (meetPoint2) {
+        this.reconstructBiDirectionalPath(
+          meetPoint2.startCell,
+          meetPoint2.goalCell
+        );
+        return;
+      }
+    }
+
+    throw new Error('no solution');
+  }
+
+  private expandBiDirectional(
+    frontier: AStarCell[],
+    explored: Set<string>,
+    cellMap: Map<string, AStarCell>,
+    oppositeExplored: Set<string>,
+    oppositeCellMap: Map<string, AStarCell>,
+    heuristicType: string,
+    useAStar: boolean,
+    fromStart: boolean
+  ): { startCell: AStarCell; goalCell: AStarCell } | null {
+    if (frontier.length === 0) return null;
+
+    frontier.sort((a, b) => {
+      const scoreA = useAStar ? a.f : a.h;
+      const scoreB = useAStar ? b.f : b.h;
+      return scoreA - scoreB;
+    });
+
+    const cell = frontier.shift()!;
+    const stateKey = `${cell.state[0]},${cell.state[1]}`;
+
+    if (explored.has(stateKey)) return null;
+
+    explored.add(stateKey);
+    this.numExplored += 1;
+
+    this.steps.push({
+      type: StepType.NodeExplored,
+      position: cell.state,
+    });
+    const neighbors = this.neighbors(cell.state);
+    for (const [action, state] of Object.entries(neighbors)) {
+      const neighborKey = `${state[0]},${state[1]}`;
+
+      // Check if we've met the opposite search
+      if (oppositeExplored.has(neighborKey)) {
+        const oppositeCell = oppositeCellMap.get(neighborKey)!;
+        return fromStart
+          ? { startCell: cell, goalCell: oppositeCell }
+          : { startCell: oppositeCell, goalCell: cell };
+      }
+
+      if (!explored.has(neighborKey)) {
+        const moveCost = 1;
+        const g = cell.g + moveCost;
+        const targetPos = fromStart ? this.goal : this.start;
+        const h = this.getHeuristic(state, heuristicType);
+        const child = new AStarCell(state, cell, action, g, h);
+
+        const existingIdx = frontier.findIndex(
+          (c) => c.state[0] === state[0] && c.state[1] === state[1]
+        );
+        const childScore = useAStar ? child.f : child.h;
+
+        if (existingIdx === -1) {
+          frontier.push(child);
+          cellMap.set(neighborKey, child);
+          this.steps.push({
+            type: StepType.NodeAdded,
+            position: state,
+          });
+        } else if (
+          childScore <
+          (useAStar ? frontier[existingIdx].f : frontier[existingIdx].h)
+        ) {
+          frontier[existingIdx] = child;
+          cellMap.set(neighborKey, child);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private reconstructBiDirectionalPath(
+    startCell: AStarCell,
+    goalCell: AStarCell
+  ): void {
+    const cells: Position[] = [];
+
+    // Trace from start to meeting point
+    let current: Cell | undefined = startCell;
+    while (current) {
+      cells.unshift(current.state);
+      current = current.parent;
+    }
+
+    // Trace from meeting point to goal
+    current = goalCell.parent;
+    while (current) {
+      cells.push(current.state);
+      current = current.parent;
+    }
+
+    this.solution = { actions: [], cells };
+
+    cells.forEach((pos) => {
+      this.steps.push({
+        type: StepType.PathFound,
+        position: pos,
+      });
+    });
+  }
 }
 
 export const solveAStar = (
@@ -161,7 +352,7 @@ export const solveAStar = (
   const maze = new AStarMaze(width, height, start, goal, walls);
   maze.start = start;
   maze.goal = goal;
-  maze.informedSearch(options.heuristic, true);
+  maze.informedSearch(options.heuristic, true, options);
   return {
     path: (maze.solution as any).cells,
     nodesExplored: maze.numExplored,
@@ -181,7 +372,7 @@ export const solveGreedyBestFirst = (
   const maze = new AStarMaze(width, height, start, goal, walls);
   maze.start = start;
   maze.goal = goal;
-  maze.informedSearch(options.heuristic, false);
+  maze.informedSearch(options.heuristic, false, options);
   return {
     path: (maze.solution as any).cells,
     nodesExplored: maze.numExplored,
