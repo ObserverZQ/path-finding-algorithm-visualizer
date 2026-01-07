@@ -243,7 +243,8 @@ export default function Maze() {
     const colorMap = {
       [StepType.NodeAdded]: 'rgb(230, 255, 251)',
       [StepType.NodeExplored]: '#B2EBF2',
-      [StepType.PathFound]: '#FFD70F',
+      [StepType.PathFound]: '#FFD78F',
+      // [StepType.PathFound]: 'yellow',
     };
     const map = new Map<string, string>();
     if (!animator) {

@@ -34,7 +34,7 @@ export enum Heuristic {
 export interface BaseOptions {
   allowDiagonal: boolean;
   biDirectional: boolean;
-  doNotCrossCorners: boolean;
+  // doNotCrossCorners: boolean;
 }
 
 export interface WeightedOptions extends BaseOptions {
@@ -67,7 +67,7 @@ type Metrics = {
 export const defaultBaseOptions: BaseOptions = {
   allowDiagonal: false,
   biDirectional: false,
-  doNotCrossCorners: false,
+  // doNotCrossCorners: false,
 };
 
 export const defaultWeightedOptions: WeightedOptions = {

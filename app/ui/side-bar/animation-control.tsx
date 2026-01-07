@@ -48,8 +48,8 @@ export default function AnimationControl() {
           Run
         </Button>
         <Button
-          as='span'
           className='w-[50%] bg-secondary-500'
+          disabled={status === SearchStatus.Running}
           onClick={onClickManualStep}
         >
           <VscDebugContinue className='w-5 h-5 mr-2' />

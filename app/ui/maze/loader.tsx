@@ -22,7 +22,7 @@ export default function MazeLoader() {
         </p>
       </div>
       <Maze />
-      <PlayController />
+      {/* <PlayController /> */}
     </div>
   );
 }
