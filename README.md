@@ -9,7 +9,7 @@ This project was inspired by Harvard’s [CS50 Introduction to Artificial Intell
 ## 🛠 Core Functionality
 * **Search Suite**: Implements Breadth-First Search (BFS), Depth-First Search (DFS), Greedy Best-First Search, and A* Search.
 
-* **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, modify playback speed and choose running mode(continuously or step-by-step) to observe how different algorithms navigate constraints.
+* **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, modify playback speed and choose running mode(continuously or step-by-step(WIP)) to observe how different algorithms navigate constraints.
 
 * **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, Visited Nodes, and Path Length, providing empirical data to support theoretical complexity analysis.
 
