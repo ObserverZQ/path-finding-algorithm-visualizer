@@ -1,9 +1,9 @@
 type MazeEventListener = () => void;
-
+type MazeEvent = 'clearPath' | 'clearAll' | 'manualStep' | 'run';
 class MazeEventEmitter {
   private listeners = new Map<string, Set<MazeEventListener>>();
 
-  on(event: 'clearPath' | 'clearAll', callback: MazeEventListener) {
+  on(event: MazeEvent, callback: MazeEventListener) {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
@@ -11,7 +11,7 @@ class MazeEventEmitter {
     return () => this.listeners.get(event)!.delete(callback);
   }
 
-  emit(event: 'clearPath' | 'clearAll') {
+  emit(event: MazeEvent) {
     this.listeners.get(event)?.forEach((callback) => callback());
   }
 }

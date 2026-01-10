@@ -20,6 +20,8 @@ export default function AnimationControl() {
     window.alert(
       'Manual Step work in progress. Thank you for your patience.:D'
     );
+    // todo test manual step event
+    // mazeEvents.emit('manualStep');
   };
 
   const onClickClearPath = () => {

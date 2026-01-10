@@ -10,6 +10,7 @@ import { AnimationStep, StepType } from '@/app/lib/animation/types';
 import { runAlgorithm } from '@/app/lib/algorithms/runner';
 import { Animator } from '@/app/lib/animation/animator';
 import { mazeEvents } from '@/app/lib/mazeEvents';
+import PlayController from './play-controller';
 
 const URLImage = React.memo(function URLImage({
   src,
@@ -158,14 +159,26 @@ export default function Maze() {
   };
 
   /**
-   * Listens to SideBar Control Events
+   * Listens to SideBar Control and Controller Events
    */
   const { status, algorithm, setStatus, setMetrics } = useSideBarStore();
   const [animator, setAnimator] = useState<Animator | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
+  const [showController, setShowController] = useState(false);
   // const [currentStepIndex, setCurrentStepIndex] = useState(0);
   // const algorithmSteps = useRef<AnimationStep[]>([]);
+  // Listen for manual step events
+  useEffect(() => {
+    const unsubscribeManualStep = mazeEvents.on('manualStep', () => {
+      setShowController(true);
+    });
+
+    return () => {
+      unsubscribeManualStep();
+    };
+  }, []);
+
+  // Listen for Default Run
   useEffect(() => {
     // console.log('status, algorithm, ', status, algorithm);
     // return;
@@ -286,73 +299,83 @@ export default function Maze() {
     };
   }, []);
   return (
-    <Stage
-      width={900}
-      height={500}
-      onMouseDown={onStageMouseDown}
-      onMouseUp={onStageMouseUp}
-      onMouseMove={onStageMouseMove}
-    >
-      <Layer ref={stageLayerRef}>
-        {grids.map(({ id, x, y }) => (
-          <Group x={x} y={y} key={id}>
-            <Rect
-              name='wall'
-              width={gridSize}
-              height={gridSize}
-              stroke='rgba(222,225,230,1)'
-              strokeWidth={1}
-              id={id}
-              fill={colorMap.get(id) || 'rgb(255,255,255)'}
-            />
-            <Text
-              text={id}
-              fontSize={12}
-              fontFamily='Calibri'
-              fill='rgba(150,150,150,1)'
-            />
-          </Group>
-        ))}
-        {/* starting point */}
-        <URLImage
-          name='start'
-          src='/starting-point.png'
-          x={coordToPx(points.start.j)}
-          y={coordToPx(points.start.i)}
-          width={40}
-          height={40}
-          draggable
-          onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
-            onDragPoint(e, 'start');
-          }}
-          onMouseEnter={() => {
-            document.body.style.cursor = 'pointer';
-          }}
-          onMouseLeave={() => {
-            document.body.style.cursor = 'default';
-          }}
-        />
+    <div className='flex flex-col'>
+      <Stage
+        width={900}
+        height={500}
+        onMouseDown={onStageMouseDown}
+        onMouseUp={onStageMouseUp}
+        onMouseMove={onStageMouseMove}
+      >
+        <Layer ref={stageLayerRef}>
+          {grids.map(({ id, x, y }) => (
+            <Group x={x} y={y} key={id}>
+              <Rect
+                name='wall'
+                width={gridSize}
+                height={gridSize}
+                stroke='rgba(222,225,230,1)'
+                strokeWidth={1}
+                id={id}
+                fill={colorMap.get(id) || 'rgb(255,255,255)'}
+              />
+              <Text
+                text={id}
+                fontSize={12}
+                fontFamily='Calibri'
+                fill='rgba(150,150,150,1)'
+              />
+            </Group>
+          ))}
+          {/* starting point */}
+          <URLImage
+            name='start'
+            src='/starting-point.png'
+            x={coordToPx(points.start.j)}
+            y={coordToPx(points.start.i)}
+            width={40}
+            height={40}
+            draggable
+            onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
+              onDragPoint(e, 'start');
+            }}
+            onMouseEnter={() => {
+              document.body.style.cursor = 'pointer';
+            }}
+            onMouseLeave={() => {
+              document.body.style.cursor = 'default';
+            }}
+          />
 
-        {/* destination point */}
-        <URLImage
-          name='goal'
-          src='/destination.png'
-          x={coordToPx(points.goal.j)}
-          y={coordToPx(points.goal.i)}
-          width={40}
-          height={40}
-          draggable
-          onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
-            onDragPoint(e, 'goal');
-          }}
-          onMouseEnter={() => {
-            document.body.style.cursor = 'pointer';
-          }}
-          onMouseLeave={() => {
-            document.body.style.cursor = 'default';
-          }}
+          {/* destination point */}
+          <URLImage
+            name='goal'
+            src='/destination.png'
+            x={coordToPx(points.goal.j)}
+            y={coordToPx(points.goal.i)}
+            width={40}
+            height={40}
+            draggable
+            onDragEnd={(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) => {
+              onDragPoint(e, 'goal');
+            }}
+            onMouseEnter={() => {
+              document.body.style.cursor = 'pointer';
+            }}
+            onMouseLeave={() => {
+              document.body.style.cursor = 'default';
+            }}
+          />
+        </Layer>
+      </Stage>
+      {showController && animator && (
+        <PlayController
+          animator={animator}
+          currentStepIndex={currentStepIndex}
+          setCurrentStepIndex={setCurrentStepIndex}
+          onClose={() => setShowController(false)}
         />
-      </Layer>
-    </Stage>
+      )}
+    </div>
   );
 }
