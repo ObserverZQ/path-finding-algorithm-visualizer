@@ -13,6 +13,8 @@ This project was inspired by Harvard’s [CS50 Introduction to Artificial Intell
 
 * **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, Visited Nodes, and Path Length, providing empirical data to support theoretical complexity analysis.
 
+* **Algorithm Learning(WIP)**: Introduces each algorithm briefly, including bi-directional and heuristics settings, and supports algorithm comparisons in terms of complexity and path length through various sample maze setups.
+
 ## 🏗 Technical Implementation
 * **State Management**: Built with zustand to ensure the search frontier and explored sets stay synchronized with the UI during high-speed animations.
 
