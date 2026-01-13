@@ -58,7 +58,7 @@ export default function AlgorithmSelection() {
   return (
     <div>
       <div className='text-lg font-[600] text-neutral-900'>
-        Algorithm Selection
+        II. Algorithm Selection
       </div>
       <div className='text-sm text-neutral-600 mb-2'>
         Choose a path-finding algorithm and its setting.
