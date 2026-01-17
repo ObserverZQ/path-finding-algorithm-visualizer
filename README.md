@@ -4,7 +4,7 @@ An interactive canvas-based tool designed to visualize the mechanics and efficie
 [Live Demo](https://path-finding-algorithm-visualizer-gamma.vercel.app/)
 
 ## 🎓 Motivation
-This project was inspired by Harvard’s [CS50 Introduction to Artificial Intelligence with Python](https://cs50.harvard.edu/ai/), specifically the lecture on [Search](https://cs50.harvard.edu/ai/weeks/0/). I wanted to translate the abstract concepts of frontier expansion and heuristic-based search (A*) into a tangible, interactive frontend experience to better understand the performance trade-offs in real-time.
+This project was inspired by Harvard’s [CS50 Introduction to Artificial Intelligence with Python](https://cs50.harvard.edu/ai/), specifically the lecture on [Search](https://cs50.harvard.edu/ai/weeks/0/). I wanted to translate the abstract concepts of frontier expansion and heuristic-based search (A*) into a tangible, interactive frontend experience to experimentally evaluate algorithmic tradeoffs between optimality, exploration cost, and heuristic guidance in real time.
 
 ## 🛠 Core Functionality
 * **Search Suite**: Implements Breadth-First Search (BFS), Depth-First Search (DFS), Greedy Best-First Search, and A* Search.
@@ -20,7 +20,19 @@ This project was inspired by Harvard’s [CS50 Introduction to Artificial Intell
 
 * **Modular Design**: Structured the codebase to allow for easy extensibility of new heuristic functions, such as Manhattan or Euclidean distance for A* Search.
 
-* **Responsive Rendering**: Optimized for various viewport sizes using Tailwind CSS, ensuring the grid remains usable on different devices.
+## 🔬 Algorithm Comparison: Greedy Best-First Search vs A*
+
+The visualizer is designed not only as a teaching tool, but as an experimental platform for analyzing algorithmic tradeoffs.
+
+Below is a controlled comparison between Greedy Best-First Search and A* on the same maze configuration.
+
+![GBFS vs A* Comparison](./examples/gbfs_vs_astar_comparison.png)
+
+**Observations:**
+- Greedy Best-First Search explores fewer nodes initially but produces a longer, suboptimal path.
+- A* explores a slightly larger frontier but guarantees the optimal path by balancing path cost and heuristic guidance.
+- This demonstrates the tradeoff between exploration efficiency and solution optimality, reinforcing theoretical complexity analysis with empirical measurement.
+
 
 ## 💻 Tech Stack
 
