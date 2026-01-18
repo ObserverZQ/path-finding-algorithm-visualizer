@@ -15,23 +15,28 @@ This project was inspired by Harvard’s [CS50 Introduction to Artificial Intell
 
 * **Algorithm Learning(WIP)**: Introduces each algorithm briefly, including bi-directional and heuristics settings, and supports algorithm comparisons in terms of complexity and path length through various sample maze setups.
 
-## 🏗 Technical Implementation
-* **State Management**: Built with zustand to ensure the search frontier and explored sets stay synchronized with the UI during high-speed animations.
+## 🏗 Engineering Challenges & Optimization
+* **Performance via Decoupling**: To maintain a responsive 60 FPS UI, I decoupled the search execution from the animation. The algorithm pre-calculates the result and logs state changes into a steps array. These are then rendered using requestAnimationFrame, preventing the main thread from blocking during heavy computation on large grids.
+* **Advanced Informed Search**: Implemented an extensible AStarMaze class supporting:
+    * Bi-directional Search: Significantly reduces the search space by expanding frontiers from both the start and goal nodes simultaneously.
+    * Multiple Heuristic Metrics: Optimized for different movement constraints using Manhattan, Euclidean, Octile, and Chebyshev distances.
+* **Frontier Management**: Utilized a prioritized frontier approach where nodes are dynamically sorted to maintain $O(\log n)$ efficiency (simulating a Priority Queue) for both A* ($f = g + h$) and Greedy Best-First Search ($f = h$).
 
-* **Modular Design**: Structured the codebase to allow for easy extensibility of new heuristic functions, such as Manhattan or Euclidean distance for A* Search.
+* **State Management**: Leveraged Zustand for atomic state updates. By mapping the algorithm's "steps" to React state, I ensured that only the specific grid cells being explored or updated trigger a re-render, rather than the entire grid.
 
-## 🔬 Algorithm Comparison: Greedy Best-First Search vs A*
 
-The visualizer is designed not only as a teaching tool, but as an experimental platform for analyzing algorithmic tradeoffs.
+## 🔬 Empirical Analysis: Greedy Best-First vs. A*
+
+The visualizer serves as an experimental testbed to evaluate the trade-offs between exploration efficiency and path optimality.
 
 Below is a controlled comparison between Greedy Best-First Search and A* on the same maze configuration.
 
 ![GBFS vs A* Comparison](./examples/gbfs_vs_astar_comparison.png)
 
-**Observations:**
-- Greedy Best-First Search explores fewer nodes initially but produces a longer, suboptimal path.
-- A* explores a slightly larger frontier but guarantees the optimal path by balancing path cost and heuristic guidance.
-- This demonstrates the tradeoff between exploration efficiency and solution optimality, reinforcing theoretical complexity analysis with empirical measurement.
+**Key Observations:**
+- Optimality vs. Greediness: Greedy Best-First Search (GBFS) prioritizes the local heuristic ($h(n)$), leading to faster target acquisition but often resulting in suboptimal, "jagged" paths. In contrast, A* maintains optimality by balancing local greed with cumulative path cost ($g(n)$).
+- Search Space Complexity: While A* guarantees the shortest path, it typically expands a larger frontier in the middle of the search. GBFS minimizes the search space at the expense of accuracy.
+- Heuristic Impact: The comparison demonstrates that while both algorithms utilize heuristics to guide the search, only A* satisfies the condition for admissibility required to guarantee the shortest path in a 2D grid.
 
 
 ## 💻 Tech Stack
@@ -43,6 +48,10 @@ Below is a controlled comparison between Greedy Best-First Search and A* on the 
 * **Styling**: Tailwind CSS
 
 * **Deployment**: Vercel
+
+## 🔮 Future Improvements
+
+* Current implementation uses Array.sort() for the frontier ($O(n \log n)$). A future optimization involves implementing a true Binary Heap to achieve $O(\log n)$ insertions, further optimizing performance for high-density mazes.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
