@@ -14,4 +14,4 @@ const nextConfig: NextConfig = {
   // Optionally, add any other Next.js config below
 };
 
-export default withMDX(withFlowbiteReact(nextConfig));
+export default withFlowbiteReact(withMDX(nextConfig));
