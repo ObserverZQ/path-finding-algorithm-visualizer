@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, createElement } from 'react';
 import {
   TextInput,
   Checkbox,
@@ -25,9 +25,19 @@ import {
   defaultHeuristic,
   useSideBarStore,
 } from '@/app/lib/sidebar';
-import Hello from '@/app/docs/hello.mdx';
+import MD_BFS from '@/app/docs/Breadth-First-Search.md';
+import MD_DFS from '@/app/docs/Depth-First-Search.md';
+import MD_Greedy from '@/app/docs/Greedy-Best-First-Search.md';
+import MD_AStar from '@/app/docs/A-Star-Search.md';
 
 const plans = ['Manhattan', 'Euclidean', 'Octile', 'Chebyshev'];
+
+const mdMap = {
+  [AlgorithmType.BFS]: MD_BFS,
+  [AlgorithmType.DFS]: MD_DFS,
+  [AlgorithmType.GreedyBestFirst]: MD_Greedy,
+  [AlgorithmType.AStar]: MD_AStar
+};
 
 export default function AlgorithmSelection() {
   // const [open, setOpen] = useState(false);
@@ -175,7 +185,7 @@ export default function AlgorithmSelection() {
       <Drawer open={isOpen} onClose={handleClose} position='right'>
         <DrawerHeader title={algorithm.name} titleIcon={VscBook} />
         <DrawerItems>
-          <Hello />
+          {createElement(mdMap[algorithm.name as AlgorithmTypeKey])}
           {/* <p className='mb-6 text-sm text-gray-500 dark:text-gray-400'>
             Supercharge your hiring by taking advantage of our&nbsp;
             <a
