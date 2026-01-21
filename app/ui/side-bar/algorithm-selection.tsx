@@ -169,15 +169,18 @@ export default function AlgorithmSelection() {
                   </div>
                 );
               })}
-              <Button
-                outline
-                pill
-                size='sm'
-                className='mt-2 text-primary-500 border-primary-500'
-                onClick={onClickLearn}
-              >
-                Learn About {algorithm.name}
-              </Button>
+              <div className='flex justify-center'>
+                <Button
+                  outline
+                  pill
+                  size='sm'
+                  className='mt-2 text-primary-500 border-primary-500'
+                  onClick={onClickLearn}
+                >
+                  Learn About {algorithm.name}
+                </Button>
+              </div>
+
             </AccordionContent>
           </AccordionPanel>
         ))}
