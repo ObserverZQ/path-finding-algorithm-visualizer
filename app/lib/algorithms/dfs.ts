@@ -36,6 +36,12 @@ export const solveBFS = (
   const maze = new Maze(width, height, start, goal, walls);
   maze.start = start;
   maze.goal = goal;
+  console.log('BFS called with options:', options);
+  if (options?.biDirectional) {
+    // todo: implement bi-directional BFS
+  } else {
+    // todo: implement standard BFS
+  }
 
   maze.solve(QueueFrontier);
 

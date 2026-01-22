@@ -1,7 +1,6 @@
 import { Cell, Maze } from './maze';
 import type { Position } from './types';
 import { StepType } from '../animation/types';
-import { use } from 'react';
 
 export class AStarCell extends Cell {
   g: number; // Cost from start to current node
@@ -245,7 +244,7 @@ export class AStarMaze extends Maze {
     heuristicType: string,
     useAStar: boolean,
     fromStart: boolean
-  ): { startCell: AStarCell; goalCell: AStarCell } | null {
+  ): { startCell: AStarCell; goalCell: AStarCell; } | null {
     if (frontier.length === 0) return null;
 
     frontier.sort((a, b) => {
