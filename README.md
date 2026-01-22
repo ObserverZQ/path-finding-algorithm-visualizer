@@ -7,13 +7,13 @@ An interactive canvas-based tool designed to visualize the mechanics and efficie
 This project was inspired by Harvard’s [CS50 Introduction to Artificial Intelligence with Python](https://cs50.harvard.edu/ai/), specifically the lecture on [Search](https://cs50.harvard.edu/ai/weeks/0/). I wanted to translate the abstract concepts of frontier expansion and heuristic-based search (A*) into a tangible, interactive frontend experience to experimentally evaluate algorithmic tradeoffs between optimality, exploration cost, and heuristic guidance in real time.
 
 ## 🛠 Core Functionality
-* **Search Suite**: Implements Breadth-First Search (BFS), Depth-First Search (DFS), Greedy Best-First Search, and A* Search.
+* **Search Suite**: Implements Breadth-First Search (BFS), Depth-First Search (DFS), Greedy Best-First Search, and A* Search, supporting bi-directional and heuristics settings.
 
 * **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, modify playback speed and choose running mode(continuously or step-by-step(WIP)) to observe how different algorithms navigate constraints.
 
 * **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, Visited Nodes, and Path Length, providing empirical data to support theoretical complexity analysis.
 
-* **Algorithm Learning(WIP)**: Introduces each algorithm briefly, including bi-directional and heuristics settings, and supports algorithm comparisons in terms of complexity and path length through various sample maze setups.
+* **Algorithm Learning(WIP)**: Introduces each algorithm briefly and supports algorithm comparisons in terms of complexity and path length through various sample maze setups.
 
 ## 🏗 Engineering Challenges & Optimization
 * **Performance via Decoupling**: To maintain a responsive 60 FPS UI, I decoupled the search execution from the animation. The algorithm pre-calculates the result and logs state changes into a steps array. These are then rendered using requestAnimationFrame, preventing the main thread from blocking during heavy computation on large grids.
