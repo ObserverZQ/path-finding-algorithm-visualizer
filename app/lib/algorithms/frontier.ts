@@ -46,9 +46,9 @@ export abstract class BidirectionalFrontier {
   frontierStart: Cell[];
   frontierGoal: Cell[];
 
-  constructor(cellsStart: Cell[], cellsGoal: Cell[]) {
-    this.frontierStart = cellsStart;
-    this.frontierGoal = cellsGoal;
+  constructor(cellsStart: Cell, cellsGoal: Cell) {
+    this.frontierStart = [cellsStart];
+    this.frontierGoal = [cellsGoal];
   }
 
   abstract addToStart(cell: Cell): void;

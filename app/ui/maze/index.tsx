@@ -58,12 +58,12 @@ export default function Maze() {
   const [walls, setWalls] = useState<string[]>([]);
   const wallsRef = useRef<string[]>([]);
   const lastPassedGridRef = useRef<string>('');
-  useEffect(() => {
-    console.log('The latest points is:', points);
-  }, [points]);
-  useEffect(() => {
-    console.log('The latest walls are:', walls);
-  }, [walls]);
+  // useEffect(() => {
+  //   console.log('The latest points is:', points);
+  // }, [points]);
+  // useEffect(() => {
+  //   console.log('The latest walls are:', walls);
+  // }, [walls]);
   const switchGridAttrs = (rect: Node, force = '') => {
     const id = rect.attrs.id;
     if (force) {
@@ -107,7 +107,7 @@ export default function Maze() {
     if (painting) {
       const id = e.target?.attrs?.id;
       if (id && id !== lastPassedGridRef.current) {
-        console.log('drawing', e.target.attrs.id);
+        // console.log('drawing', e.target.attrs.id);
         lastPassedGridRef.current = id;
         switchGridAttrs(e.target as Shape);
       }
@@ -187,7 +187,7 @@ export default function Maze() {
       clearPaths();
       // Convert grid to 2D array (walls: true = blocked, false = passable)
       const mazeGrid = generateWallsGrid(walls);
-      console.log('maze grid:', mazeGrid);
+      // console.log('maze grid:', mazeGrid);
       console.log(
         'Running algorithm:',
         algorithm.name,
@@ -213,7 +213,7 @@ export default function Maze() {
       setAnimator(animator);
       setCurrentStepIndex(0);
       // algorithmSteps.current = result.steps;
-      console.log('animator', animator);
+      // console.log('animator', animator);
       // animator.play();
       // setStatus(SearchStatus.Paused);
     }
@@ -226,6 +226,7 @@ export default function Maze() {
 
     let lastUpdateTime = Date.now();
     let animationFrameId: number;
+    let timeoutId: NodeJS.Timeout | null = null;
 
     const animate = () => {
       const now = Date.now();
@@ -235,7 +236,7 @@ export default function Maze() {
         setCurrentStepIndex((prev) => {
           const next = Math.min(prev + 1, animator.result.steps.length - 1);
           if (next >= animator.result.steps.length - 1) {
-            setTimeout(() => setStatus(SearchStatus.Idle), 0);
+            timeoutId = setTimeout(() => setStatus(SearchStatus.Idle), 0);
           }
           // console.log('Current Step Index:', next);
           return next;
@@ -274,7 +275,10 @@ export default function Maze() {
 
   // listen to clear path and clear all events
   const clearPaths = () => {
-    setAnimator(null);
+    setAnimator((prev) => {
+      prev?.destroy();  // Clean up interval
+      return null;
+    });
   };
   useEffect(() => {
     const unsubscribePath = mazeEvents.on('clearPath', clearPaths);

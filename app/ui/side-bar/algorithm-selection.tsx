@@ -57,7 +57,6 @@ export default function AlgorithmSelection() {
     console.log('Selected algorithm:', alg);
   };
   const onClickLearn = () => {
-    console.log('Learn about', algorithm);
     setIsOpen(true);
   };
   const handleOptionChange = (

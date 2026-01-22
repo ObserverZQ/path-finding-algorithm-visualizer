@@ -4,19 +4,33 @@ export class Animator {
   result: AnimationResult;
   currentIndex: number = 0;
   speed: number = 16; // interval in ms
+  private playInterval: NodeJS.Timeout | null = null;
 
   constructor(result: AnimationResult) {
     this.result = result;
   }
 
   play(): void {
-    const interval = setInterval(() => {
+    if (this.playInterval) clearInterval(this.playInterval);
+
+    this.playInterval = setInterval(() => {
       if (this.currentIndex < this.result.steps.length - 1) {
         this.currentIndex += 1;
       } else {
-        clearInterval(interval);
+        this.stop();
       }
     }, this.speed);
+  }
+
+  stop(): void {
+    if (this.playInterval) {
+      clearInterval(this.playInterval);
+      this.playInterval = null;
+    }
+  }
+
+  destroy(): void {
+    this.stop();
   }
 
   moveNext(): void {

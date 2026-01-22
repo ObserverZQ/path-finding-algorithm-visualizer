@@ -76,11 +76,11 @@ export class Maze {
     const startTime = performance.now();
     this.numExplored = 0;
     const start = new Cell(this.start, undefined, '');
-    console.log('start', start);
+    // console.log('start', start);
     // Initialize frontier to just the starting position
     const frontier = new FrontierClass([start]);
     // Initialize an empty explored set
-    console.log('frontier', frontier);
+    // console.log('frontier', frontier);
     const explored = new Set<string>();
 
     while (true) {
