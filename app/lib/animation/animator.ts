@@ -5,6 +5,7 @@ export class Animator {
   currentIndex: number = 0;
   speed: number = 16; // interval in ms
   private playInterval: NodeJS.Timeout | null = null;
+  isPlaying: boolean = false;
 
   constructor(result: AnimationResult) {
     this.result = result;
@@ -12,7 +13,7 @@ export class Animator {
 
   play(): void {
     if (this.playInterval) clearInterval(this.playInterval);
-
+    this.isPlaying = true;
     this.playInterval = setInterval(() => {
       if (this.currentIndex < this.result.steps.length - 1) {
         this.currentIndex += 1;
@@ -27,6 +28,7 @@ export class Animator {
       clearInterval(this.playInterval);
       this.playInterval = null;
     }
+    this.isPlaying = false;
   }
 
   destroy(): void {
@@ -58,7 +60,7 @@ export class Animator {
   jumpToStep(index: number): void {
     this.currentIndex = Math.max(
       0,
-      Math.min(index, this.result.steps.length - 1)
+      Math.min(index, this.result.steps.length - 1),
     );
   }
 
