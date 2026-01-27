@@ -80,7 +80,7 @@ export default function Maze() {
     }
   };
   const onStageMouseDown = (
-    e: KonvaEventObject<MouseEvent, Node<NodeConfig>>
+    e: KonvaEventObject<MouseEvent, Node<NodeConfig>>,
   ) => {
     if (e.target.getClassName() == 'Rect') {
       const id = e.target?.attrs?.id;
@@ -96,13 +96,13 @@ export default function Maze() {
     }
   };
   const onStageMouseUp = (
-    e: KonvaEventObject<MouseEvent, Node<NodeConfig>>
+    e: KonvaEventObject<MouseEvent, Node<NodeConfig>>,
   ) => {
     setPainting('');
     setWalls([...wallsRef.current]);
   };
   const onStageMouseMove = (
-    e: KonvaEventObject<MouseEvent, Node<NodeConfig>>
+    e: KonvaEventObject<MouseEvent, Node<NodeConfig>>,
   ) => {
     if (painting) {
       const id = e.target?.attrs?.id;
@@ -116,7 +116,7 @@ export default function Maze() {
   /** Deal with the dragging of starting and goal point on the maze. */
   const onDragPoint = (
     e: KonvaEventObject<DragEvent, Node<NodeConfig>>,
-    type: 'start' | 'goal'
+    type: 'start' | 'goal',
   ) => {
     const getValidCoordinate = (val: number, boundary: number[]) => {
       if (val >= boundary[0] && val <= boundary[1]) {
@@ -130,11 +130,11 @@ export default function Maze() {
     const target = e.target;
     const fixedX = getValidCoordinate(
       Math.round(target?.x() / gridSize) * gridSize,
-      xBoundary
+      xBoundary,
     );
     const fixedY = getValidCoordinate(
       Math.round(target?.y() / gridSize) * gridSize,
-      yBoundary
+      yBoundary,
     );
     setPoints((prevPoints) => ({
       ...prevPoints,
@@ -193,14 +193,14 @@ export default function Maze() {
         algorithm.name,
         algorithm.options,
         [points.start.i, points.start.j],
-        [points.goal.i, points.goal.j]
+        [points.goal.i, points.goal.j],
       );
       const result = runAlgorithm(
         algorithm.name,
         mazeGrid,
         [points.start.i, points.start.j],
         [points.goal.i, points.goal.j],
-        { ...algorithm.options, heuristic: algorithm.heuristic }
+        { ...algorithm.options, heuristic: algorithm.heuristic },
       );
       console.log('Algorithm result:', result);
       setMetrics({
@@ -236,6 +236,7 @@ export default function Maze() {
         setCurrentStepIndex((prev) => {
           const next = Math.min(prev + 1, animator.result.steps.length - 1);
           if (next >= animator.result.steps.length - 1) {
+            animator.stop();
             timeoutId = setTimeout(() => setStatus(SearchStatus.Idle), 0);
           }
           // console.log('Current Step Index:', next);
@@ -276,7 +277,7 @@ export default function Maze() {
   // listen to clear path and clear all events
   const clearPaths = () => {
     setAnimator((prev) => {
-      prev?.destroy();  // Clean up interval
+      prev?.destroy(); // Clean up interval
       return null;
     });
   };
@@ -372,7 +373,7 @@ export default function Maze() {
           />
         </Layer>
       </Stage>
-      {showController && animator && (
+      {showController && (
         <PlayController
           animator={animator}
           currentStepIndex={currentStepIndex}

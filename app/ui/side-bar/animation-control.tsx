@@ -13,15 +13,19 @@ export default function AnimationControl() {
   const { status, setStatus } = useSideBarStore();
   const changeSearchStatus = () => {
     setStatus(
-      status === SearchStatus.Idle ? SearchStatus.Running : SearchStatus.Idle
+      status === SearchStatus.Idle ? SearchStatus.Running : SearchStatus.Idle,
     );
   };
   const onClickManualStep = () => {
     window.alert(
-      'Manual Step work in progress. Thank you for your patience.:D'
+      'Manual Step work in progress. Thank you for your patience.:D',
     );
     // todo test manual step event
-    // mazeEvents.emit('manualStep');
+
+    // changeSearchStatus();
+    // setTimeout(() => {
+    //   mazeEvents.emit('manualStep');
+    // }, 2000);
   };
 
   const onClickClearPath = () => {
