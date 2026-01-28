@@ -8,6 +8,8 @@ import {
   VscRemove,
 } from 'react-icons/vsc';
 import { mazeEvents } from '@/app/lib/mazeEvents';
+import Slider from '@rc-component/slider';
+import '@rc-component/slider/assets/index.css';
 
 export default function AnimationControl() {
   const { status, setStatus } = useSideBarStore();
@@ -44,6 +46,8 @@ export default function AnimationControl() {
       <div className='text-lg font-[600] text-neutral-900 mt-5'>
         III. Execution Control
       </div>
+      {/* todo animation speed adjustment */}
+      {/* <Slider /> */}
       <div className='mt-4 flex gap-2'>
         <Button
           className='w-[50%] bg-primary-500'
