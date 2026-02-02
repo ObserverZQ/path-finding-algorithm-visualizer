@@ -45,7 +45,7 @@ export default function PlayController({
 
   const handleNextStep = () => {
     // stop();
-    console.log('Next Step clicked', animator);
+    // console.log('Next Step clicked', animator);
     // animator.nextStep();
     setCurrentStepIndex(currentStepIndex + 1);
   };

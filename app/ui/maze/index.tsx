@@ -245,7 +245,9 @@ export default function Maze() {
         });
         lastUpdateTime = now;
       }
-      if (!showController) {
+      if (showController) {
+        setCurrentStepIndex(1);
+      } else {
         animationFrameId = requestAnimationFrame(animate);
       }
 
