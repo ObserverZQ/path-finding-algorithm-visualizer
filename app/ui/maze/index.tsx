@@ -171,6 +171,7 @@ export default function Maze() {
   useEffect(() => {
     const unsubscribeManualStep = mazeEvents.on('manualStep', () => {
       setShowController(true);
+
     });
 
     return () => {
@@ -244,8 +245,10 @@ export default function Maze() {
         });
         lastUpdateTime = now;
       }
+      if (!showController) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
 
-      animationFrameId = requestAnimationFrame(animate);
     };
 
     animationFrameId = requestAnimationFrame(animate);
@@ -373,7 +376,7 @@ export default function Maze() {
           />
         </Layer>
       </Stage>
-      {showController && (
+      {showController && animator && (
         <PlayController
           animator={animator}
           currentStepIndex={currentStepIndex}

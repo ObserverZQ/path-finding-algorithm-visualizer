@@ -19,15 +19,8 @@ export default function AnimationControl() {
     );
   };
   const onClickManualStep = () => {
-    window.alert(
-      'Manual Step work in progress. Thank you for your patience.:D',
-    );
-    // todo test manual step event
-
-    // changeSearchStatus();
-    // setTimeout(() => {
-    //   mazeEvents.emit('manualStep');
-    // }, 2000);
+    changeSearchStatus();
+    mazeEvents.emit('manualStep');
   };
 
   const onClickClearPath = () => {

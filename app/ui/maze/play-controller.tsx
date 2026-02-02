@@ -38,13 +38,16 @@ export default function PlayController({
   };
 
   const handlePrevStep = () => {
-    stop();
-    animator.prevStep();
+    // stop();
+    // animator.prevStep();
+    setCurrentStepIndex(currentStepIndex - 1);
   };
 
   const handleNextStep = () => {
-    stop();
-    animator.nextStep();
+    // stop();
+    console.log('Next Step clicked', animator);
+    // animator.nextStep();
+    setCurrentStepIndex(currentStepIndex + 1);
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,22 +62,22 @@ export default function PlayController({
       flex items-center justify-center gap-8 shadow-xs'
     >
       <VscDebugReverseContinue
-        className='text-2xl text-neutral-400'
+        className='text-2xl text-neutral-400 hover:text-neutral-600 cursor-pointer'
         onClick={handlePrevStep}
       />
       {isPlaying ? (
         <VscDebugPause
-          className='text-2xl text-neutral-400'
+          className='text-2xl text-neutral-400 hover:text-neutral-600 cursor-pointer'
           onClick={handlePlayPause}
         />
       ) : (
         <VscDebugStart
-          className='text-2xl text-neutral-400'
+          className='text-2xl text-neutral-400 hover:text-neutral-600 cursor-pointer'
           onClick={handlePlayPause}
         />
       )}
       <VscDebugContinue
-        className='text-2xl text-neutral-400'
+        className='text-2xl text-neutral-400 hover:text-neutral-600 cursor-pointer'
         onClick={handleNextStep}
       />
     </div>
