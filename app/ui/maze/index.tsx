@@ -58,12 +58,7 @@ export default function Maze() {
   const [walls, setWalls] = useState<string[]>([]);
   const wallsRef = useRef<string[]>([]);
   const lastPassedGridRef = useRef<string>('');
-  // useEffect(() => {
-  //   console.log('The latest points is:', points);
-  // }, [points]);
-  // useEffect(() => {
-  //   console.log('The latest walls are:', walls);
-  // }, [walls]);
+
   const switchGridAttrs = (rect: Node, force = '') => {
     const id = rect.attrs.id;
     if (force) {
@@ -165,13 +160,10 @@ export default function Maze() {
   const [animator, setAnimator] = useState<Animator | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showController, setShowController] = useState(false);
-  // const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  // const algorithmSteps = useRef<AnimationStep[]>([]);
   // Listen for manual step events
   useEffect(() => {
     const unsubscribeManualStep = mazeEvents.on('manualStep', () => {
       setShowController(true);
-
     });
 
     return () => {
@@ -212,51 +204,32 @@ export default function Maze() {
       });
       const animator = new Animator(result);
       setAnimator(animator);
-      setCurrentStepIndex(0);
-      // algorithmSteps.current = result.steps;
-      // console.log('animator', animator);
-      // animator.play();
-      // setStatus(SearchStatus.Paused);
+      // setCurrentStepIndex(0);
+      animator.play();
     }
-    // console.log('Algorithm status changed to:', status);
   }, [status, algorithm, points, walls]);
 
   // Effect 2: Handle animation loop separately
   useEffect(() => {
-    if (!animator || status !== SearchStatus.Running) return;
+    if (!animator) return;
 
-    let lastUpdateTime = Date.now();
-    let animationFrameId: number;
-    let timeoutId: NodeJS.Timeout | null = null;
+    animator.onStepChange = (index: number) => {
+      setCurrentStepIndex(index);
 
-    const animate = () => {
-      const now = Date.now();
-
-      // Only update if enough time has passed based on animator.speed
-      if (now - lastUpdateTime >= animator.speed) {
-        setCurrentStepIndex((prev) => {
-          const next = Math.min(prev + 1, animator.result.steps.length - 1);
-          if (next >= animator.result.steps.length - 1) {
-            animator.stop();
-            timeoutId = setTimeout(() => setStatus(SearchStatus.Idle), 0);
-          }
-          // console.log('Current Step Index:', next);
-          return next;
-        });
-        lastUpdateTime = now;
+      // Check if animation finished
+      if (index >= animator.result.steps.length - 1) {
+        setStatus(SearchStatus.Idle);
+        setShowController(false);
       }
-      if (showController) {
-        setCurrentStepIndex(1);
-      } else {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-
     };
 
-    animationFrameId = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [animator, status, setStatus]);
+    // Clean up on unmount or when animator changes
+    return () => {
+      animator.destroy();
+    };
+  }, [animator, setStatus]);
+
 
   // Memoize color calculation
   const colorMap = useMemo(() => {

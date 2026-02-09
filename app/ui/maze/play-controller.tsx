@@ -20,7 +20,7 @@ export default function PlayController({
   setCurrentStepIndex,
   onClose,
 }: PlayControllerProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(animator.isPlaying);
   const totalSteps = animator.result.steps.length;
 
   const stop = () => {
@@ -29,25 +29,34 @@ export default function PlayController({
   };
 
   const handlePlayPause = () => {
-    if (isPlaying) {
-      stop();
+    if (animator.isPlaying) {
+      animator.pause();
+      setIsPlaying(false);
     } else {
       animator.play();
       setIsPlaying(true);
     }
+    // if (isPlaying) {
+    //   stop();
+    // } else {
+    //   animator.play();
+    //   setIsPlaying(true);
+    // }
   };
 
   const handlePrevStep = () => {
     // stop();
-    // animator.prevStep();
-    setCurrentStepIndex(currentStepIndex - 1);
+    animator.prevStep();
+    setIsPlaying(false);
+    // setCurrentStepIndex(currentStepIndex - 1);
   };
 
   const handleNextStep = () => {
     // stop();
     // console.log('Next Step clicked', animator);
-    // animator.nextStep();
-    setCurrentStepIndex(currentStepIndex + 1);
+    animator.nextStep();
+    setIsPlaying(false);
+    // setCurrentStepIndex(currentStepIndex + 1);
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {

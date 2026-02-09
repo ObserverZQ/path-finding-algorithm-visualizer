@@ -1,3 +1,4 @@
+import { on } from 'events';
 import type { Position } from '../algorithms/types';
 import { AnimationResult, AnimationStep, StepType } from './types';
 export class Animator {
@@ -11,19 +12,25 @@ export class Animator {
     this.result = result;
   }
 
+  // Callback for external listeners to react to step changes
+  onStepChange: (index: number) => void = () => { };
+  onPlayStatusChange: (isPlaying: boolean) => void = () => { };
+
   play(): void {
     if (this.playInterval) clearInterval(this.playInterval);
     this.isPlaying = true;
+    this.onPlayStatusChange(this.isPlaying);
     this.playInterval = setInterval(() => {
       if (this.currentIndex < this.result.steps.length - 1) {
         this.currentIndex += 1;
+        this.onStepChange(this.currentIndex);
       } else {
         this.stop();
       }
     }, this.speed);
   }
 
-  stop(): void {
+  pause(): void {
     if (this.playInterval) {
       clearInterval(this.playInterval);
       this.playInterval = null;
@@ -31,14 +38,13 @@ export class Animator {
     this.isPlaying = false;
   }
 
-  destroy(): void {
-    this.stop();
+  stop(): void {
+    this.pause();
+    this.onPlayStatusChange(this.isPlaying);
   }
 
-  moveNext(): void {
-    if (this.currentIndex < this.result.steps.length - 1) {
-      this.currentIndex += 1;
-    }
+  destroy(): void {
+    this.stop();
   }
 
   getCurrentStep(): AnimationStep | null {
@@ -46,14 +52,20 @@ export class Animator {
   }
 
   nextStep(): AnimationStep | null {
-    this.moveNext();
+    if (this.currentIndex < this.result.steps.length - 1) {
+      this.currentIndex += 1;
+      this.onStepChange(this.currentIndex);
+    }
+    this.pause();
     return this.getCurrentStep();
   }
 
   prevStep(): AnimationStep | null {
     if (this.currentIndex > 0) {
       this.currentIndex -= 1;
+      this.onStepChange(this.currentIndex);
     }
+    this.pause();
     return this.getCurrentStep();
   }
 
@@ -62,6 +74,8 @@ export class Animator {
       0,
       Math.min(index, this.result.steps.length - 1),
     );
+    // this.pause();
+    this.onStepChange(this.currentIndex);
   }
 
   reset(): void {
