@@ -9,11 +9,11 @@ This project was inspired by Harvard’s [CS50 Introduction to Artificial Intell
 ## 🛠 Core Functionality
 * **Search Suite**: Implements Breadth-First Search (BFS), Depth-First Search (DFS), Greedy Best-First Search, and A* Search, supporting bi-directional and heuristics settings.
 
-* **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, modify playback speed and choose running mode(continuously or step-by-step(WIP)) to observe how different algorithms navigate constraints.
+* **Interactive Environment**: Allows users to dynamically place obstacles, adjust start/destination nodes, modify playback speed and choose running mode(continuously or step-by-step) to observe how different algorithms navigate constraints.
 
 * **Technical Log**: Features a real-time monitor that tracks Runtime, Operations Count, Visited Nodes, and Path Length, providing empirical data to support theoretical complexity analysis.
 
-* **Algorithm Learning(WIP)**: Introduces each algorithm briefly and supports algorithm comparisons in terms of complexity and path length through various sample maze setups.
+* **Algorithm Learning**: Introduces each algorithm briefly and supports algorithm comparisons(WIP) in terms of complexity and path length through various sample maze setups.
 
 ## 🏗 Engineering Challenges & Optimization
 * **Performance via Decoupling**: To maintain a responsive 60 FPS UI, I decoupled the search execution from the animation. The algorithm pre-calculates the result and logs state changes into a steps array. These are then rendered using requestAnimationFrame, preventing the main thread from blocking during heavy computation on large grids.

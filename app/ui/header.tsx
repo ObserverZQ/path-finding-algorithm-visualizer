@@ -97,8 +97,8 @@ export default function Header() {
                 process without pause.
               </p>
               <p>
-                ii. Manual Step(working in progress) supports executing one step
-                at a time and shows more detailed log output.
+                ii. Manual Step supports executing one step at a time and shows
+                more detailed log output.
               </p>
             </div>
           </div>
